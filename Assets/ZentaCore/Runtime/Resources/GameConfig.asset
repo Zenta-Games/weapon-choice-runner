@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a1c24d1b986c4b49b2041ee276acc45, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier: 
+  LevelsPath: Levels
+  GameUI: {fileID: 8625158393567285710, guid: d7e1b8545435cf744a491029ce581d5d, type: 3}
+  LoadingScene: 1
+  LevelsVariable: {fileID: 11400000, guid: 6ba1ab1f6c4435d47b2ee89928fdc759, type: 2}
+  LevelLabelPrefix: Level
+  GameStateProtection: 0
+  RequiredLevelObjects: []
