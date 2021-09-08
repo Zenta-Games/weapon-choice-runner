@@ -9,6 +9,10 @@ public class DynamicCube : MonoBehaviour
     public CubePivot cubePivot;
 
     public CubeState cubeState;
+
+    private Rigidbody rgd;
+
+    private BoxCollider boxCollider;
     
     public CubeState CubeState 
     {
@@ -22,14 +26,24 @@ public class DynamicCube : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        rgd = GetComponent<Rigidbody>();
+
+        boxCollider = GetComponent<BoxCollider>();
+
+        CubeState = CubeState.COLLECTABLE;
+    }
+
     public void OnCubeStateChanged(CubeState cubeState) 
     {
         switch (cubeState)
         {
             case CubeState.ON_HERO:
-                Debug.Log("gggg");
 
                 CubeManager.Instance.OnNewCubeAttachedHero(this);
+                rgd.isKinematic = true;
+                boxCollider.enabled = false;
                 break;
 
             case CubeState.ON_WEAPON:
@@ -41,7 +55,7 @@ public class DynamicCube : MonoBehaviour
                 break;
             
             case CubeState.DESTROYED:
-
+                Destroy(this.gameObject);
                 break;
             
             default:
@@ -87,7 +101,15 @@ public class DynamicCube : MonoBehaviour
     {
         if (cubePivot != null)
         {
-            transform.position = Vector3.Slerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * 5f);
+            transform.position = Vector3.Slerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * 10f);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && CubeState == CubeState.COLLECTABLE)
+        {
+            AttachHero();
         }
     }
 }

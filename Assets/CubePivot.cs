@@ -16,7 +16,7 @@ public class CubePivot : MonoBehaviour
 
         cubePoint.gameObject.SetActive(false);
 
-        cubePoint.transform.localPosition = new Vector3(0,0, Random.Range(1f, 1.4f));
+        cubePoint.transform.localPosition = new Vector3(0,0, Random.Range(1.5f, 2.1f));
 
         hasAttach = false;
     }

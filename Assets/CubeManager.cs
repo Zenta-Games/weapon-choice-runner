@@ -14,10 +14,8 @@ public class CubeManager : MonoBehaviour
 
     public List<DynamicCube> attachedCubes;
 
-    [HideInInspector]
     public List<CubePivot> cubePivots;
     
-    [HideInInspector]
     public List<CubeRotater> cubeRotaters;
 
     private void Start()
@@ -48,13 +46,20 @@ public class CubeManager : MonoBehaviour
 
         CubePivot newCubePivot = getNextPointTarget;
 
-        getNextPointTarget.hasAttach = true;
+        if (newCubePivot == null)
+        {
+            dynamicCube.DestroyThis();
+        }
+        else
+        {
+            getNextPointTarget.hasAttach = true;
 
-        dynamicCube.SetHero(getNextPointTarget);
+            dynamicCube.SetHero(getNextPointTarget);
+        }
     }
 
     private void Update()
     {
-        transform.Translate(Vector3.forward * Time.deltaTime * 5f);
+        
     }
 }

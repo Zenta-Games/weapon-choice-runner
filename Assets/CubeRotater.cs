@@ -10,11 +10,11 @@ public class CubeRotater : MonoBehaviour
     public float rotateSpeed;
     
     public List<CubePivot> cubePivots;
+    
+    public int direction;
 
-    private void Start()
+    private void Awake()
     {
-        int direction = Random.Range(0, 2);
-
         if (direction == 0)
         {
             rotateSpeed = Random.Range(-120f, -180f);
