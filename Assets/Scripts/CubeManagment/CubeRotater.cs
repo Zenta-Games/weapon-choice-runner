@@ -25,6 +25,11 @@ public class CubeRotater : MonoBehaviour
         }
 
         cubePivots = GetComponentsInChildren<CubePivot>().ToList();
+
+        for (int i = 0; i < cubePivots.Count; i++)
+        {
+            cubePivots[i].RandomChildPosition();
+        }
     }
 
     void Update()

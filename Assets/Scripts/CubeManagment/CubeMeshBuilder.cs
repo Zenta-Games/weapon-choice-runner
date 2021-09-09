@@ -20,7 +20,7 @@ public class CubeMeshBuilder : MonoBehaviour
         {
            GameObject cube = Instantiate(dynamicCubeSample, transform.position + vertices[i],Quaternion.identity,this.transform);
 
-           // cube.transform.LookAt(transform.position);
+           cube.transform.LookAt(transform.position);
         }
     }
 }

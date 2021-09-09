@@ -11,7 +11,7 @@ public class WE_Bridge : MonoBehaviour,IWeapon
 
     public bool CanActive()
     {
-        return false;
+        return true;
     }
 
     public List<CubePivot> CubePivots { get { return cubePivots; } set { cubePivots = value; } }

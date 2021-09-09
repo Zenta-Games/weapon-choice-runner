@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class DynamicCube : MonoBehaviour
 {
-    [HideInInspector]
     public CubePivot cubePivot;
 
     public CubeState cubeState;
@@ -13,6 +12,8 @@ public class DynamicCube : MonoBehaviour
     private Rigidbody rgd;
 
     private BoxCollider boxCollider;
+
+    private Transform model;
     
     public CubeState CubeState 
     {
@@ -33,6 +34,8 @@ public class DynamicCube : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>();
 
         CubeState = CubeState.COLLECTABLE;
+
+        model = transform.GetChild(0);
     }
 
     public void OnCubeStateChanged(CubeState cubeState) 
@@ -42,7 +45,9 @@ public class DynamicCube : MonoBehaviour
             case CubeState.ON_HERO:
 
                 CubeManager.Instance.OnNewCubeAttachedHero(this);
+
                 rgd.isKinematic = true;
+
                 boxCollider.enabled = false;
                 break;
 
@@ -92,16 +97,24 @@ public class DynamicCube : MonoBehaviour
         cubePivot = pivotTarget;
     }
 
-    public void SetWeapon(CubePivot cubePivot) 
+    public void SetWeapon(CubePivot pivotTarget) 
     {
-        
+        cubePivot = pivotTarget;
+
+        cubePivot.hasAttach = true;
+
+        AttachWeapon();
     }
 
     private void Update()
     {
         if (cubePivot != null)
         {
-            transform.position = Vector3.Slerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * 10f);
+            transform.position = Vector3.Slerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * 5f);
+
+            model.transform.rotation = Quaternion.Lerp(model.transform.rotation,cubePivot.cubePoint.transform.rotation,Time.deltaTime * 5f);
+
+            model.transform.localScale = Vector3.Slerp(model.transform.localScale,cubePivot.cubePoint.transform.localScale,Time.deltaTime * 5f);
         }
     }
 

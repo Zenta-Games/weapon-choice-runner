@@ -5,14 +5,13 @@ using System.Linq;
 
 public class WE_Blade : MonoBehaviour , IWeapon
 {
-
     public WeaponType WeaponType { get { return weaponType; } set { weaponType = value; } }
 
     public WeaponType weaponType;
 
     public bool CanActive()
     {
-        return false;
+        return true;
     }
 
     public List<CubePivot> CubePivots { get { return cubePivots; } set { cubePivots = value; } }
