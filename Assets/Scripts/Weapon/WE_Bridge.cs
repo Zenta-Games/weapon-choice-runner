@@ -9,6 +9,12 @@ public class WE_Bridge : MonoBehaviour,IWeapon
 
     public WeaponType weaponType;
 
+    public Transform camReference;
+    public Transform CamReference { get { return camReference; } }
+    
+    public float actionTime;
+    public float ActionTime { get { return actionTime; } }
+
     public bool CanActive()
     {
         return true;

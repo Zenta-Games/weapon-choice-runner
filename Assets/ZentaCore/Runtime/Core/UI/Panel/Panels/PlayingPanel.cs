@@ -9,6 +9,8 @@ namespace Zenta.Core.Runtime.UI.Panel.Panels
 
         public Action<WeaponType> onSelectWeapon;
 
+        public FixedTouchField touchField;
+
         public override void UpdatePanel(bool status)
         {
             base.UpdatePanel(status);

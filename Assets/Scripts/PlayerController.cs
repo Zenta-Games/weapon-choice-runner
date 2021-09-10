@@ -6,17 +6,28 @@ using Zenta.Core.Runtime.Managers;
 using Zenta.Core.Runtime.UI.Panel.Panels;
 using Zenta.Core.Runtime;
 using Zenta.Core.Runtime.Interfaces;
+using NaughtyAttributes;
 
 public class PlayerController : MonoBehaviour , IInitializable
 {
+    public static PlayerController Instance;
+
     public List<IWeapon> weapons;
 
     private CubeManager cubeManager;
 
     public Transform weaponContent;
 
+    private PlayingPanel playingPanel;
+
+    public Transform model;
+
+    [MinMaxSlider(-5f, 5f)] public Vector2 horizontalLimits;
+
     private void Awake()
     {
+        Instance = this;
+
         Application.targetFrameRate = 30;
     }
 
@@ -28,7 +39,11 @@ public class PlayerController : MonoBehaviour , IInitializable
 
         weapons = weaponContent.transform.GetComponentsInChildren<IWeapon>().ToList();
 
-        PanelManager.Instance.GetPanel<PlayingPanel>().onSelectWeapon += ActiveWeapon;
+        playingPanel = PanelManager.Instance.GetPanel<PlayingPanel>();
+
+        playingPanel.onSelectWeapon += ActiveWeapon;
+
+        playingPanel.touchField.onDrag += Move;
     }
 
     private void Update()
@@ -37,6 +52,17 @@ public class PlayerController : MonoBehaviour , IInitializable
         {
             transform.Translate(Vector3.forward * Time.deltaTime * 5f);
         }
+    }
+
+    private void Move(Vector2 movementVector) 
+    {
+        float xValue = movementVector.x / 30f + model.transform.localPosition.x;
+
+        xValue = Mathf.Clamp(xValue, horizontalLimits.x, horizontalLimits.y);
+
+        Vector3 fixedLocalPosition = new Vector3(xValue, 0, 0);
+
+        model.transform.localPosition = Vector3.Lerp(model.transform.localPosition,fixedLocalPosition,Time.deltaTime * 20f); 
     }
 
     public void ActiveWeapon(WeaponType weaponType) 
@@ -56,6 +82,8 @@ public class PlayerController : MonoBehaviour , IInitializable
         {
             if (weapon.CanActive())
             {
+                CameraController.Instance.SetTransformReference(weapon.CamReference,weapon.ActionTime);
+
                 for (int i = 0; i < weapon.RequiredCubeCount; i++)
                 {
                     cubeManager.attachedCubes[0].cubePivot.hasAttach = false;

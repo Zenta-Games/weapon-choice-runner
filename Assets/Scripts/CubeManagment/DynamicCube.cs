@@ -49,18 +49,41 @@ public class DynamicCube : MonoBehaviour
                 rgd.isKinematic = true;
 
                 boxCollider.enabled = false;
+
+                positionLerpSpeed = 15f;
+
                 break;
 
             case CubeState.ON_WEAPON:
+
+                positionLerpSpeed = 5f;
 
                 break;
          
             case CubeState.COLLECTABLE:
 
+                positionLerpSpeed = 0f;
+
                 break;
             
             case CubeState.DESTROYED:
-                Destroy(this.gameObject);
+
+                Debug.Log("Destroy This");
+
+                cubePivot.hasAttach = false;
+
+                cubePivot = null;
+
+                rgd.isKinematic = false;
+
+                rgd.useGravity = true;
+
+                boxCollider.enabled = true;
+
+                rgd.AddForce(Vector3.up * -250f);
+
+                Destroy(this.gameObject, 2f);
+
                 break;
             
             default:
@@ -106,11 +129,13 @@ public class DynamicCube : MonoBehaviour
         AttachWeapon();
     }
 
+    private float positionLerpSpeed = 5f;
+
     private void Update()
     {
         if (cubePivot != null)
         {
-            transform.position = Vector3.Slerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * 5f);
+            transform.position = Vector3.Slerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * positionLerpSpeed);
 
             model.transform.rotation = Quaternion.Lerp(model.transform.rotation,cubePivot.cubePoint.transform.rotation,Time.deltaTime * 5f);
 

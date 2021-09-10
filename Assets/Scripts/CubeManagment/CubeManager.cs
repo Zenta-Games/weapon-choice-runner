@@ -18,6 +18,8 @@ public class CubeManager : MonoBehaviour
     
     public List<CubeRotater> cubeRotaters;
 
+    public DynamicCube dynamicCubeSample;
+
     public int attachedCubeCount
     {
         get { return attachedCubes.Count; }
@@ -31,6 +33,8 @@ public class CubeManager : MonoBehaviour
 
         attachedCubes = new List<DynamicCube>();
 
+        GateManager.Instance.onTakeNewGate += OnTakeGate;
+
         for (int i = 0; i < cubeRotaters.Count; i++)
         {
             for (int j = 0; j < cubeRotaters[i].cubePivots.Count; j++)
@@ -42,7 +46,12 @@ public class CubeManager : MonoBehaviour
 
     private CubePivot getNextPointTarget
     {
-        get { return cubePivots.Find(x => x.hasAttach == false); }
+        get 
+        {
+            int emptyPivotCount = cubePivots.FindAll(x => x.hasAttach == false).Count;
+
+            return cubePivots.FindAll(x => x.hasAttach == false)[Random.Range(0,emptyPivotCount)]; 
+        }
     }
 
     public void OnNewCubeAttachedHero(DynamicCube dynamicCube) 
@@ -63,8 +72,70 @@ public class CubeManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void OnTakeGate(float value,MultiplerType multiplerType) 
     {
-        
+        int changingValue = 0;
+
+        switch (multiplerType)
+        {
+            case MultiplerType.MULTIPLY:
+
+                changingValue = (attachedCubeCount * (int)value) - attachedCubeCount;
+
+                break;
+         
+            case MultiplerType.ADD:
+
+                changingValue = (int)value;
+                
+                break;
+            
+            case MultiplerType.SUBTRACT:
+
+                changingValue = (int)value * -1;
+
+                break;
+            
+            case MultiplerType.DIVIDE:
+
+                changingValue = (int)(((float)attachedCubeCount / value) - attachedCubeCount);
+
+                break;
+            default:
+                break;
+        }
+
+        if (changingValue >= 0)
+        {
+            AddCubes(changingValue);
+        }
+        else
+        {
+            DestroyCubes(changingValue);
+        }
+    }
+
+    private void DestroyCubes(int count) 
+    {
+        count = Mathf.Abs(count);
+
+        Debug.Log(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            attachedCubes[0].DestroyThis();
+
+            attachedCubes.RemoveAt(0);
+        }    
+    }
+
+    private void AddCubes(int count) 
+    {
+        for (int i = 0; i < count; i++)
+        {
+           DynamicCube dynamicCube = Instantiate(dynamicCubeSample,PlayerController.Instance.model.transform.position,Quaternion.identity,null).GetComponent<DynamicCube>();
+
+           dynamicCube.AttachHero();
+        }
     }
 }

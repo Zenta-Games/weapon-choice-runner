@@ -13,6 +13,10 @@ public interface IWeapon
 
     int RequiredCubeCount { get; }
 
+    Transform CamReference { get;}
+
+    float ActionTime { get; }
+
     CubePivot GetNextPivot();
 
     void Active();
