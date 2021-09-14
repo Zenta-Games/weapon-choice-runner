@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using DG.Tweening;
 
 public class CubeManager : MonoBehaviour
 {
@@ -50,7 +51,14 @@ public class CubeManager : MonoBehaviour
         {
             int emptyPivotCount = cubePivots.FindAll(x => x.hasAttach == false).Count;
 
-            return cubePivots.FindAll(x => x.hasAttach == false)[Random.Range(0,emptyPivotCount)]; 
+            if (emptyPivotCount != 0)
+            {
+                return cubePivots.FindAll(x => x.hasAttach == false)[Random.Range(0, emptyPivotCount)];
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 
@@ -137,5 +145,24 @@ public class CubeManager : MonoBehaviour
 
            dynamicCube.AttachHero();
         }
+    }
+
+    public void SetWeaponPose() 
+    {
+        transform.DOLocalMove(new Vector3(0,.5f,0),.1f);
+
+        transform.DOScale(new Vector3(.4f,.4f,.4f),.1f);
+
+        for (int i = 0; i < cubePivots.Count; i++)
+        {
+            cubePivots[i].SetWeaponScale();
+        }
+    }
+
+    public void SetDefaultPose() 
+    {
+        transform.DOLocalMove(new Vector3(0,0,0), .1f);
+
+        transform.DOScale(new Vector3(1f, 1f, 1f), .1f);
     }
 }

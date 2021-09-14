@@ -9,6 +9,8 @@ public class CubePivot : MonoBehaviour
     public Transform cubePoint;
 
     public bool hasAttach;
+
+    public DynamicCube attachedCube;
  
     private void Awake()
     {
@@ -18,10 +20,17 @@ public class CubePivot : MonoBehaviour
 
         hasAttach = false;
 
+        attachedCube = null;
+
         if (GetComponentInChildren<MeshRenderer>())
         {
             GetComponentInChildren<MeshRenderer>().enabled = false;
         }
+    }
+
+    public void SetWeaponScale() 
+    {
+    //       cubePoint.DOScale(new Vector3(0f,0f,0f),.1f);
     }
 
     public void RandomChildPosition() 

@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using DG.Tweening;
 
 public class WE_Blade : MonoBehaviour , IWeapon
 {
+    public WeaponState weaponState;
+    public WeaponState WeaponState { get { return weaponState; } set { weaponState = value; } }
     public WeaponType WeaponType { get { return weaponType; } set { weaponType = value; } }
 
     public WeaponType weaponType;
 
     public Transform camReference;
     public Transform CamReference { get { return camReference; } }
+
+    public Transform characterReference;
+    public Transform CharacterReference { get { return camReference; } }
 
     public float actionTime;
     public float ActionTime { get { return actionTime; } }
@@ -28,15 +34,57 @@ public class WE_Blade : MonoBehaviour , IWeapon
     {
         get { return cubePivots.Count; }
     }
-
-    private void Start()
+    private void Awake()
     {
         CubePivots = GetComponentsInChildren<CubePivot>().ToList();
+
+        WeaponState = WeaponState.READY;
+
+        startPosition = transform.localPosition;
     }
 
-    public void Active() { }
+    
 
-    public void Destroy() { }
+    private void Update()
+    {
+        if (WeaponState == WeaponState.ACTIVE)
+        {
+            transform.Rotate(Vector3.up * -350f*Time.deltaTime);
+        }
+    }
+
+    private Vector3 startPosition;
+
+    public void Active()
+    {
+        WeaponState = WeaponState.ACTIVE;
+
+        transform.DOLocalMove(new Vector3(0, -0.3f, 25), 1f, false).OnComplete(() =>
+        {
+            WeaponState = WeaponState.READY;
+
+            transform.localEulerAngles = Vector3.zero;
+
+            transform.localPosition = startPosition;
+        }); 
+
+        StartCoroutine(_Destroy());
+    }
+
+    private IEnumerator _Destroy()
+    {
+        yield return new WaitForSeconds(.7f);
+
+        Destroy();
+    }
+
+    public void Destroy() 
+    {
+        for (int i = 0; i < cubePivots.Count; i++)
+        {
+            cubePivots[i].attachedCube.DestroyThis();
+        }
+    }
 
     public CubePivot GetNextPivot()
     {

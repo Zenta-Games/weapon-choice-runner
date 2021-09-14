@@ -16,6 +16,8 @@ public class CameraController : MonoBehaviour
 
     public void SetTransformReference(Transform reference,float actionTime) 
     {
+        return;
+
         StartCoroutine(_SetTransformReference(reference,actionTime));
     }
 

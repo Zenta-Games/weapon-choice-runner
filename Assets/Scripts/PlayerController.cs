@@ -16,8 +16,6 @@ public class PlayerController : MonoBehaviour , IInitializable
 
     private CubeManager cubeManager;
 
-    public Transform weaponContent;
-
     private PlayingPanel playingPanel;
 
     public Transform model;
@@ -37,7 +35,7 @@ public class PlayerController : MonoBehaviour , IInitializable
 
         cubeManager = CubeManager.Instance;
 
-        weapons = weaponContent.transform.GetComponentsInChildren<IWeapon>().ToList();
+        weapons = transform.GetComponentsInChildren<IWeapon>().ToList();
 
         playingPanel = PanelManager.Instance.GetPanel<PlayingPanel>();
 
@@ -46,11 +44,19 @@ public class PlayerController : MonoBehaviour , IInitializable
         playingPanel.touchField.onDrag += Move;
     }
 
+
+    private float movementSpeed = 8f;
+
+    private float lerpedSpeed = 0f;
+
     private void Update()
     {
         if (GameManager.Instance.State == GameState.Playing)
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * 5f);
+
+            lerpedSpeed = Mathf.Lerp(lerpedSpeed,movementSpeed,Time.deltaTime * 10f);
+
+            transform.Translate(Vector3.forward * Time.deltaTime * lerpedSpeed);
         }
     }
 
@@ -60,7 +66,7 @@ public class PlayerController : MonoBehaviour , IInitializable
 
         xValue = Mathf.Clamp(xValue, horizontalLimits.x, horizontalLimits.y);
 
-        Vector3 fixedLocalPosition = new Vector3(xValue, 0, 0);
+        Vector3 fixedLocalPosition = new Vector3(xValue,0, 0);
 
         model.transform.localPosition = Vector3.Lerp(model.transform.localPosition,fixedLocalPosition,Time.deltaTime * 20f); 
     }
@@ -84,8 +90,14 @@ public class PlayerController : MonoBehaviour , IInitializable
             {
                 CameraController.Instance.SetTransformReference(weapon.CamReference,weapon.ActionTime);
 
+                //cubeManager.SetWeaponPose();
+
+                movementSpeed = 2f;
+
                 for (int i = 0; i < weapon.RequiredCubeCount; i++)
                 {
+                    cubeManager.attachedCubes[0].cubePivot.attachedCube = null;
+
                     cubeManager.attachedCubes[0].cubePivot.hasAttach = false;
 
                     cubeManager.attachedCubes[0].SetWeapon(weapon.CubePivots[i]);
@@ -93,14 +105,13 @@ public class PlayerController : MonoBehaviour , IInitializable
                     cubeManager.attachedCubes.RemoveAt(0);
 
                     yield return new WaitForEndOfFrame();
-                    //;
                 }
 
-                for (int i = 0; i < weapon.RequiredCubeCount; i++)
-                {
+                yield return new WaitForSeconds(.1f);
 
-                }
-                //weapon.Active();
+                movementSpeed = 8f;
+
+                weapon.Active();
             }
         }
     }

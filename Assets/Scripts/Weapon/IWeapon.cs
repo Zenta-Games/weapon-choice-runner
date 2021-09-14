@@ -9,11 +9,15 @@ public interface IWeapon
 
     List<CubePivot> CubePivots { get; set; }
 
+    WeaponState WeaponState { get; set; }
+
     bool CanActive();
 
     int RequiredCubeCount { get; }
 
     Transform CamReference { get;}
+
+    Transform CharacterReference { get; }
 
     float ActionTime { get; }
 
@@ -22,6 +26,12 @@ public interface IWeapon
     void Active();
 
     void Destroy();
+}
+
+public enum WeaponState 
+{
+    READY,
+    ACTIVE
 }
 
 public enum WeaponType 

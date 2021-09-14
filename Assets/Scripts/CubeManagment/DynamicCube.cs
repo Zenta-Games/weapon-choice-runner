@@ -38,6 +38,8 @@ public class DynamicCube : MonoBehaviour
         model = transform.GetChild(0);
     }
 
+    Vector3 velocity;
+
     public void OnCubeStateChanged(CubeState cubeState) 
     {
         switch (cubeState)
@@ -50,13 +52,15 @@ public class DynamicCube : MonoBehaviour
 
                 boxCollider.enabled = false;
 
-                positionLerpSpeed = 15f;
+                positionLerpSpeed = 10f;
 
                 break;
 
             case CubeState.ON_WEAPON:
 
-                positionLerpSpeed = 5f;
+                positionLerpSpeed = 15f;
+
+                boxCollider.enabled = true;
 
                 break;
          
@@ -68,9 +72,12 @@ public class DynamicCube : MonoBehaviour
             
             case CubeState.DESTROYED:
 
-                Debug.Log("Destroy This");
+                if (cubePivot != null)
+                {
+                    cubePivot.hasAttach = false;
 
-                cubePivot.hasAttach = false;
+                    cubePivot.attachedCube = null;
+                }
 
                 cubePivot = null;
 
@@ -80,7 +87,7 @@ public class DynamicCube : MonoBehaviour
 
                 boxCollider.enabled = true;
 
-                rgd.AddForce(Vector3.up * -250f);
+                rgd.AddForce(velocity * 50f,ForceMode.VelocityChange);
 
                 Destroy(this.gameObject, 2f);
 
@@ -124,6 +131,8 @@ public class DynamicCube : MonoBehaviour
     {
         cubePivot = pivotTarget;
 
+        cubePivot.attachedCube = this;
+
         cubePivot.hasAttach = true;
 
         AttachWeapon();
@@ -131,15 +140,45 @@ public class DynamicCube : MonoBehaviour
 
     private float positionLerpSpeed = 5f;
 
+    public float targetDistance;
+
+    private Vector3 lastPosition;
+
     private void Update()
     {
+        velocity = transform.position - lastPosition;
+
+        lastPosition = transform.position;
+
         if (cubePivot != null)
         {
-            transform.position = Vector3.Slerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * positionLerpSpeed);
+            if (CubeState == CubeState.ON_WEAPON)
+            {
+                //targetDistance = Vector3.Distance(cubePivot.cubePoint.transform.position, transform.position);
 
-            model.transform.rotation = Quaternion.Lerp(model.transform.rotation,cubePivot.cubePoint.transform.rotation,Time.deltaTime * 5f);
+                //if (targetDistance < 1f)
+                //{
 
-            model.transform.localScale = Vector3.Slerp(model.transform.localScale,cubePivot.cubePoint.transform.localScale,Time.deltaTime * 5f);
+                //}
+                //else
+                //{
+                //}
+
+                transform.position = Vector3.Lerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * positionLerpSpeed);
+
+                transform.rotation = Quaternion.Lerp(model.transform.rotation, cubePivot.transform.rotation, Time.deltaTime * 50f);
+
+                model.transform.localScale = Vector3.Lerp(model.transform.localScale, cubePivot.cubePoint.transform.localScale, Time.deltaTime * 500f);
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(transform.position, cubePivot.cubePoint.transform.position, Time.deltaTime * positionLerpSpeed);
+
+                transform.rotation = Quaternion.Lerp(model.transform.rotation, cubePivot.transform.rotation, Time.deltaTime * 5f);
+
+                model.transform.localScale = Vector3.Slerp(model.transform.localScale, cubePivot.cubePoint.transform.localScale, Time.deltaTime * 5f);
+            }
+
         }
     }
 
