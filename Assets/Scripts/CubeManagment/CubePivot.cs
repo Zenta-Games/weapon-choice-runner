@@ -8,8 +8,6 @@ public class CubePivot : MonoBehaviour
     [HideInInspector]
     public Transform cubePoint;
 
-    public bool hasAttach;
-
     public DynamicCube attachedCube;
  
     private void Awake()
@@ -17,8 +15,6 @@ public class CubePivot : MonoBehaviour
         cubePoint = transform.GetChild(0);
 
         cubePoint.gameObject.SetActive(false);
-
-        hasAttach = false;
 
         attachedCube = null;
 

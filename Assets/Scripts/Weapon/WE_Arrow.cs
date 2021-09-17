@@ -59,7 +59,7 @@ public class WE_Arrow : MonoBehaviour , IWeapon
     {
         WeaponState = WeaponState.ACTIVE;
 
-        transform.DOLocalMove(new Vector3(0, 1, 40), 1f, false).OnComplete(() =>
+        transform.DOMove(transform.position + new Vector3(0,0, 40), 1f, false).OnComplete(() =>
         {
             WeaponState = WeaponState.READY;
 

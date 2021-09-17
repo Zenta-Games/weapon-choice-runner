@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using DG.Tweening;
 
 public class WE_Rock : MonoBehaviour , IWeapon
 {
@@ -40,10 +41,50 @@ public class WE_Rock : MonoBehaviour , IWeapon
 
         WeaponState = WeaponState.READY;
     }
+    
+    private Vector3 startPosition;
 
-    public void Active() { }
+    public void Active()
+    {
+        WeaponState = WeaponState.ACTIVE;
 
-    public void Destroy() { }
+        transform.DOMove(transform.position + new Vector3(0, 0, 35f), 2f, false).OnComplete(() =>
+        {
+            WeaponState = WeaponState.READY;
+
+            transform.localEulerAngles = Vector3.zero;
+
+            transform.localPosition = startPosition;
+        });
+
+        StartCoroutine(_Destroy());
+    }
+
+    private void Update()
+    {
+        if (WeaponState == WeaponState.ACTIVE)
+        {
+            transform.Rotate(Vector3.right * 400f * Time.deltaTime);
+        }
+    }
+
+    private IEnumerator _Destroy()
+    {
+        yield return new WaitForSeconds(1.7f);
+
+        Destroy();
+    }
+
+    public void Destroy()
+    {
+        for (int i = 0; i < cubePivots.Count; i++)
+        {
+            if (cubePivots[i].attachedCube != null)
+            {
+                cubePivots[i].attachedCube.DestroyThis();
+            }
+        }
+    }
 
     public CubePivot GetNextPivot()
     {

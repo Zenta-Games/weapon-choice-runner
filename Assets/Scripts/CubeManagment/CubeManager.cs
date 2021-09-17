@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using DG.Tweening;
+using TMPro;
 
 public class CubeManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class CubeManager : MonoBehaviour
     public List<CubeRotater> cubeRotaters;
 
     public DynamicCube dynamicCubeSample;
+
+    public TextMeshProUGUI countText;
 
     public int attachedCubeCount
     {
@@ -43,17 +46,19 @@ public class CubeManager : MonoBehaviour
                 cubePivots.Add(cubeRotaters[i].cubePivots[j]);
             }
         }
+
+        SetTextToCount();
     }
 
     private CubePivot getNextPointTarget
     {
         get 
         {
-            int emptyPivotCount = cubePivots.FindAll(x => x.hasAttach == false).Count;
+            int emptyPivotCount = cubePivots.FindAll(x => x.attachedCube == null).Count;
 
             if (emptyPivotCount != 0)
             {
-                return cubePivots.FindAll(x => x.hasAttach == false)[Random.Range(0, emptyPivotCount)];
+                return cubePivots.FindAll(x => x.attachedCube == false)[Random.Range(0, emptyPivotCount)];
             }
             else
             {
@@ -64,8 +69,6 @@ public class CubeManager : MonoBehaviour
 
     public void OnNewCubeAttachedHero(DynamicCube dynamicCube) 
     {
-        attachedCubes.Add(dynamicCube);
-
         CubePivot newCubePivot = getNextPointTarget;
 
         if (newCubePivot == null)
@@ -74,10 +77,15 @@ public class CubeManager : MonoBehaviour
         }
         else
         {
-            getNextPointTarget.hasAttach = true;
+            attachedCubes.Add(dynamicCube);
+
+            newCubePivot.attachedCube = dynamicCube;
 
             dynamicCube.SetHero(getNextPointTarget);
+
+            SetTextToCount();
         }
+
     }
 
     public void OnTakeGate(float value,MultiplerType multiplerType) 
@@ -127,18 +135,29 @@ public class CubeManager : MonoBehaviour
     {
         count = Mathf.Abs(count);
 
-        Debug.Log(count);
-
         for (int i = 0; i < count; i++)
         {
             attachedCubes[0].DestroyThis();
 
             attachedCubes.RemoveAt(0);
-        }    
+        }
+
+    }
+
+    public void DetachCube(DynamicCube dynamicCube) 
+    {
+        attachedCubes.Remove(dynamicCube);
+
+        SetTextToCount();
     }
 
     private void AddCubes(int count) 
     {
+        if (attachedCubeCount + count > 140)
+        {
+            count = 140 - attachedCubeCount;
+        }
+
         for (int i = 0; i < count; i++)
         {
            DynamicCube dynamicCube = Instantiate(dynamicCubeSample,PlayerController.Instance.model.transform.position,Quaternion.identity,null).GetComponent<DynamicCube>();
@@ -164,5 +183,10 @@ public class CubeManager : MonoBehaviour
         transform.DOLocalMove(new Vector3(0,0,0), .1f);
 
         transform.DOScale(new Vector3(1f, 1f, 1f), .1f);
+    }
+
+    public void SetTextToCount() 
+    {
+        countText.text = attachedCubes.Count.ToString();
     }
 }

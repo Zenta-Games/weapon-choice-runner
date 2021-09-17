@@ -59,7 +59,7 @@ public class WE_Blade : MonoBehaviour , IWeapon
     {
         WeaponState = WeaponState.ACTIVE;
 
-        transform.DOLocalMove(new Vector3(0, -0.3f, 25), 1f, false).OnComplete(() =>
+        transform.DOMove(transform.position + new Vector3(0,0,25), 1f, false).OnComplete(() =>
         {
             WeaponState = WeaponState.READY;
 
@@ -82,7 +82,10 @@ public class WE_Blade : MonoBehaviour , IWeapon
     {
         for (int i = 0; i < cubePivots.Count; i++)
         {
-            cubePivots[i].attachedCube.DestroyThis();
+            if (cubePivots[i].attachedCube != null)
+            {
+                cubePivots[i].attachedCube.DestroyThis();
+            }
         }
     }
 

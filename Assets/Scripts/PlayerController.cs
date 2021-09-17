@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour , IInitializable
 
     public Transform model;
 
+    private EnemyManager enemyManager;
+
     [MinMaxSlider(-5f, 5f)] public Vector2 horizontalLimits;
 
     private void Awake()
@@ -27,6 +29,11 @@ public class PlayerController : MonoBehaviour , IInitializable
         Instance = this;
 
         Application.targetFrameRate = 30;
+    }
+
+    private void Start()
+    {
+        enemyManager = EnemyManager.Instance;
     }
 
     public void Initialize(Level level)
@@ -45,7 +52,7 @@ public class PlayerController : MonoBehaviour , IInitializable
     }
 
 
-    private float movementSpeed = 8f;
+    private float movementSpeed = 10f;
 
     private float lerpedSpeed = 0f;
 
@@ -53,8 +60,12 @@ public class PlayerController : MonoBehaviour , IInitializable
     {
         if (GameManager.Instance.State == GameState.Playing)
         {
-
             lerpedSpeed = Mathf.Lerp(lerpedSpeed,movementSpeed,Time.deltaTime * 10f);
+
+            if (enemyManager.HaveClosestEnemy(model.transform.position))
+            {
+                lerpedSpeed = Mathf.Lerp(lerpedSpeed,0, Time.deltaTime * 10f);
+            }
 
             transform.Translate(Vector3.forward * Time.deltaTime * lerpedSpeed);
         }
@@ -90,7 +101,7 @@ public class PlayerController : MonoBehaviour , IInitializable
             {
                 CameraController.Instance.SetTransformReference(weapon.CamReference,weapon.ActionTime);
 
-                //cubeManager.SetWeaponPose();
+                weapon.WeaponState = WeaponState.ACTIVE;
 
                 movementSpeed = 2f;
 
@@ -98,23 +109,21 @@ public class PlayerController : MonoBehaviour , IInitializable
                 {
                     cubeManager.attachedCubes[0].cubePivot.attachedCube = null;
 
-                    cubeManager.attachedCubes[0].cubePivot.hasAttach = false;
-
                     cubeManager.attachedCubes[0].SetWeapon(weapon.CubePivots[i]);
 
                     cubeManager.attachedCubes.RemoveAt(0);
 
                     yield return new WaitForEndOfFrame();
+
+                    cubeManager.SetTextToCount();
                 }
 
                 yield return new WaitForSeconds(.1f);
 
-                movementSpeed = 8f;
+                movementSpeed = 10f;
 
                 weapon.Active();
             }
         }
     }
-
-  
 }

@@ -50,7 +50,7 @@ public class DynamicCube : MonoBehaviour
 
                 rgd.isKinematic = true;
 
-                boxCollider.enabled = false;
+                // boxCollider.enabled = false;
 
                 positionLerpSpeed = 10f;
 
@@ -74,8 +74,6 @@ public class DynamicCube : MonoBehaviour
 
                 if (cubePivot != null)
                 {
-                    cubePivot.hasAttach = false;
-
                     cubePivot.attachedCube = null;
                 }
 
@@ -88,6 +86,8 @@ public class DynamicCube : MonoBehaviour
                 boxCollider.enabled = true;
 
                 rgd.AddForce(velocity * 50f,ForceMode.VelocityChange);
+
+                CubeManager.Instance.DetachCube(this);
 
                 Destroy(this.gameObject, 2f);
 
@@ -116,6 +116,11 @@ public class DynamicCube : MonoBehaviour
         CubeState = CubeState.DESTROYED;
     }
 
+    public void DestroyThis(Vector3 damagePosition)
+    {
+        CubeState = CubeState.DESTROYED;
+    }
+
     [Button("Set Collectable Mode")]
     public void SetCollectableMode()
     {
@@ -132,8 +137,6 @@ public class DynamicCube : MonoBehaviour
         cubePivot = pivotTarget;
 
         cubePivot.attachedCube = this;
-
-        cubePivot.hasAttach = true;
 
         AttachWeapon();
     }
