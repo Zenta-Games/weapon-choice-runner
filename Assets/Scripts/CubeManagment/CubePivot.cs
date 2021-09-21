@@ -9,6 +9,9 @@ public class CubePivot : MonoBehaviour
     public Transform cubePoint;
 
     public DynamicCube attachedCube;
+
+    [HideInInspector]
+    public MeshRenderer meshRenderer;
  
     private void Awake()
     {
@@ -18,9 +21,11 @@ public class CubePivot : MonoBehaviour
 
         attachedCube = null;
 
-        if (GetComponentInChildren<MeshRenderer>())
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
+
+        if (meshRenderer != null)
         {
-            GetComponentInChildren<MeshRenderer>().enabled = false;
+            meshRenderer.enabled = false;
         }
     }
 

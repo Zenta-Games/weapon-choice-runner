@@ -92,6 +92,12 @@ public class DynamicCube : MonoBehaviour
                 Destroy(this.gameObject, 2f);
 
                 break;
+
+            case CubeState.ON_FINISH:
+
+                Finish.Instance.currentCraftableObject.AtachCube(this);
+                
+                break;
             
             default:
                 break;
@@ -114,6 +120,11 @@ public class DynamicCube : MonoBehaviour
     public void DestroyThis()
     {
         CubeState = CubeState.DESTROYED;
+    }
+
+    public void AtachFinishObject() 
+    {
+        CubeState = CubeState.ON_FINISH;
     }
 
     public void DestroyThis(Vector3 damagePosition)
@@ -179,7 +190,7 @@ public class DynamicCube : MonoBehaviour
 
                 transform.rotation = Quaternion.Lerp(model.transform.rotation, cubePivot.transform.rotation, Time.deltaTime * 5f);
 
-                model.transform.localScale = Vector3.Slerp(model.transform.localScale, cubePivot.cubePoint.transform.localScale, Time.deltaTime * 5f);
+                model.transform.localScale = Vector3.Slerp(model.transform.localScale, cubePivot.cubePoint.transform.localScale, Time.deltaTime * 10f);
             }
 
         }
@@ -199,5 +210,6 @@ public enum CubeState
     ON_HERO,
     ON_WEAPON,
     COLLECTABLE,
+    ON_FINISH,
     DESTROYED
 }

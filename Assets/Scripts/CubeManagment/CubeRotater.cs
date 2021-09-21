@@ -17,11 +17,11 @@ public class CubeRotater : MonoBehaviour
     {
         if (direction == 0)
         {
-            rotateSpeed = Random.Range(-120f, -180f);
+            rotateSpeed = Random.Range(-240f, -380f);
         }
         else
         {
-            rotateSpeed = Random.Range(120f, 180f);
+            rotateSpeed = Random.Range(240f, 380f);
         }
 
         cubePivots = GetComponentsInChildren<CubePivot>().ToList();

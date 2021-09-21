@@ -48,7 +48,7 @@ public class WE_Rock : MonoBehaviour , IWeapon
     {
         WeaponState = WeaponState.ACTIVE;
 
-        transform.DOMove(transform.position + new Vector3(0, 0, 35f), 2f, false).OnComplete(() =>
+        transform.DOMove(transform.position + new Vector3(0, 0, 55f), 3f, false).OnComplete(() =>
         {
             WeaponState = WeaponState.READY;
 
@@ -70,7 +70,7 @@ public class WE_Rock : MonoBehaviour , IWeapon
 
     private IEnumerator _Destroy()
     {
-        yield return new WaitForSeconds(1.7f);
+        yield return new WaitForSeconds(2.7f);
 
         Destroy();
     }

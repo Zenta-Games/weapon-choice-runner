@@ -166,6 +166,11 @@ public class CubeManager : MonoBehaviour
         }
     }
 
+    public DynamicCube NewCube(Vector3 position)
+    {
+        return Instantiate(dynamicCubeSample, position, Quaternion.identity, null).GetComponent<DynamicCube>();
+    }
+
     public void SetWeaponPose() 
     {
         transform.DOLocalMove(new Vector3(0,.5f,0),.1f);
