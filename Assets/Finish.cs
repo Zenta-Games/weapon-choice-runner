@@ -18,8 +18,6 @@ public class Finish : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
-        PlayerPrefs.SetInt("placedCubeCount",20);
     }
 
     private void Start()

@@ -30,12 +30,16 @@ public class PlayerController : MonoBehaviour , IInitializable
 
     public float finishDistance;
 
+    public List<Ground_Weapon_Selection> ground_Weapon_Selections;
+
     private void Awake()
     {
         Instance = this;
 
         Application.targetFrameRate = 30;
     }
+
+    Ground_Weapon_Selection currentWeapon;
 
     private void Start()
     {
@@ -44,6 +48,8 @@ public class PlayerController : MonoBehaviour , IInitializable
         finish = Finish.Instance;
 
         finishDistance = finish.transform.position.z;
+
+        ground_Weapon_Selections = GameObject.FindObjectsOfType<Ground_Weapon_Selection>().ToList();
     }
 
     public void Initialize(Level level)
@@ -86,6 +92,18 @@ public class PlayerController : MonoBehaviour , IInitializable
 
             playingPanel.ProgressBar.UpdateValue(transform.position.z / finishDistance);
 
+            Ground_Weapon_Selection weapon = GetClosestWeapon();
+
+            if (weapon != null)
+            {
+                if ((weapon.transform.position.z - transform.position.z) < 1f)
+                {
+                    currentWeapon = weapon;
+
+                    ReadyWeapon(weapon.weaponType);
+                }
+            }
+
             if (finishDistance - transform.position.z <= .5f)
             {
                 onFinishState = true;
@@ -93,6 +111,35 @@ public class PlayerController : MonoBehaviour , IInitializable
                 StartFinishState();
             }
         }
+    }
+
+    private void ReadyWeapon(WeaponType weaponType) 
+    {
+        Time.timeScale = .05f;
+
+        playingPanel.JiggleTargetWeapon(weaponType);
+    }
+
+    private Ground_Weapon_Selection GetClosestWeapon()
+    {
+        List<Ground_Weapon_Selection> weapons = ground_Weapon_Selections.FindAll(x => x.isUsed == false);
+
+        if (weapons.Count == 0)
+        {
+            return null;
+        }
+
+        Ground_Weapon_Selection firstWeapon = weapons[0];
+
+        for (int i = 0; i < weapons.Count; i++)
+        {
+            if (Mathf.Abs((transform.position.z - weapons[i].transform.position.z)) < Mathf.Abs((transform.position.z - firstWeapon.transform.position.z)))
+            {
+                firstWeapon = weapons[i];
+            }
+        }
+
+        return firstWeapon;
     }
 
     private void Move(Vector2 movementVector) 
@@ -108,6 +155,13 @@ public class PlayerController : MonoBehaviour , IInitializable
 
     public void ActiveWeapon(WeaponType weaponType) 
     {
+        if (currentWeapon != null)
+        {
+            currentWeapon.Hide();
+        }
+
+        Time.timeScale = 1f;
+
         StartCoroutine(_ActiveWeapon(weaponType));
     }
 
@@ -175,6 +229,10 @@ public class PlayerController : MonoBehaviour , IInitializable
                 yield return new WaitForEndOfFrame();
 
                 cubeManager.SetTextToCount();
+
+                int placedCubeCount = PlayerPrefs.GetInt("placedCubeCount");
+
+                PlayerPrefs.SetInt("placedCubeCount", placedCubeCount + 1);
             }
         }
 
@@ -185,6 +243,10 @@ public class PlayerController : MonoBehaviour , IInitializable
             cubeManager.attachedCubes[0].DestroyThis();
 
             yield return new WaitForEndOfFrame();
+
+            int placedCubeCount = PlayerPrefs.GetInt("placedCubeCount");
+
+            PlayerPrefs.SetInt("placedCubeCount",placedCubeCount + 1);
         }
 
         yield return new WaitForSeconds(.5f);

@@ -10,8 +10,12 @@ public class WeaponSelectionButton : MonoBehaviour
 
     public Action<WeaponType> onSelectWeapon;
 
+    public Animator animator;
+
     private void Awake()
     {
         GetComponent<Button>().onClick.AddListener(() => { onSelectWeapon?.Invoke(weaponType); });
+
+        animator.enabled = false;
     }
 }

@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 139980489190082017}
   - component: {fileID: 5551093199427894981}
   - component: {fileID: 8794890910045821734}
+  - component: {fileID: 2129409847}
   m_Layer: 5
   m_Name: Arrow
   m_TagString: Untagged
@@ -301,6 +302,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 1
+  animator: {fileID: 2129409847}
+--- !u!95 &2129409847
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711028028827891474}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c6093a4cb23ae54fa97c9b1878dbb39, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1259520594606632589
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,6 +413,7 @@ GameObject:
   - component: {fileID: 519183316129990489}
   - component: {fileID: 4073699208883663603}
   - component: {fileID: 967688665203164240}
+  - component: {fileID: 2129409843}
   m_Layer: 5
   m_Name: Blade
   m_TagString: Untagged
@@ -512,6 +534,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 2
+  animator: {fileID: 2129409843}
+--- !u!95 &2129409843
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2367926894110564266}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c6093a4cb23ae54fa97c9b1878dbb39, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2479845594338029830
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,6 +687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 4
+  animator: {fileID: 0}
 --- !u!1 &2737141810456077145
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,6 +821,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 3
+  animator: {fileID: 0}
 --- !u!1 &3204328099063948154
 GameObject:
   m_ObjectHideFlags: 0
@@ -1388,6 +1432,7 @@ GameObject:
   - component: {fileID: 7873425943955113801}
   - component: {fileID: 1280151572592316740}
   - component: {fileID: 7662495523962827693}
+  - component: {fileID: 2129409846}
   m_Layer: 5
   m_Name: Rock
   m_TagString: Untagged
@@ -1508,6 +1553,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponType: 0
+  animator: {fileID: 2129409846}
+--- !u!95 &2129409846
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5291536773575388484}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c6093a4cb23ae54fa97c9b1878dbb39, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5413822714203839435
 GameObject:
   m_ObjectHideFlags: 0
@@ -1827,6 +1892,8 @@ MonoBehaviour:
   status: 0
   ProgressBar: {fileID: 4681945841953640727}
   touchField: {fileID: 1730351965984252962}
+  buttons: []
+  weaponContent: {fileID: 4395954743172543765}
 --- !u!1 &8194315470029292559
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,7 +2012,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 40}
+  m_AnchoredPosition: {x: 0, y: 80}
   m_SizeDelta: {x: 0, y: 250}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &8586317799841382077
@@ -2005,7 +2072,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 1
-  m_CellSize: {x: 250, y: 250}
+  m_CellSize: {x: 229.76, y: 279.04}
   m_Spacing: {x: 80, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -2461,6 +2528,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac7069515e1578a4da1bc3738cce0f34, type: 3}
+--- !u!224 &6824641396044208288 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2177497712246995472, guid: ac7069515e1578a4da1bc3738cce0f34,
+    type: 3}
+  m_PrefabInstance: {fileID: 4651648391696163504}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4681945841953640727 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 32762693304890279, guid: ac7069515e1578a4da1bc3738cce0f34,
@@ -2473,9 +2546,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e06ec8ecfa05cd04e84d670b907aafb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &6824641396044208288 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2177497712246995472, guid: ac7069515e1578a4da1bc3738cce0f34,
-    type: 3}
-  m_PrefabInstance: {fileID: 4651648391696163504}
-  m_PrefabAsset: {fileID: 0}

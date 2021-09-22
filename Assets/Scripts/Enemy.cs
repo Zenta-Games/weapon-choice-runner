@@ -80,6 +80,8 @@ public class Enemy : MonoBehaviour
             if (Vector3.Distance(playerPosition, transform.position) < 10f)
             {
                 agent.SetDestination(playerPosition);
+
+                GetComponentInChildren<Animator>().SetBool("Walk", true);
             }
         }
         else

@@ -57,5 +57,10 @@ public class EnemyCountCalculator : MonoBehaviour
     public void EnemyKill() 
     {
         CalculateCount();
+
+        if (enemies.Count == 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
