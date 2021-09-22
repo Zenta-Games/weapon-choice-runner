@@ -1,4 +1,6 @@
 /// Comments beginning with three slashes are specific to the injection file.
+// Upgrade NOTE: excluded shader from DX11 because it uses wrong array syntax (type[size] name)
+#pragma exclude_renderers d3d11
 /// They won't be included in the resulting .shader file.
 /// I have indented these comments below for readability, they will help you understand each available special comment.
 

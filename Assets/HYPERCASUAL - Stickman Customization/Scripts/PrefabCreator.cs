@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using System.IO;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class PrefabCreator : MonoBehaviour
 {
+#if UNITY_EDITOR
 
     public GameObject modelPrefab;
 
@@ -217,4 +221,6 @@ public class PrefabCreator : MonoBehaviour
         }
         else return false;
     }
+#endif
+
 }

@@ -40,12 +40,17 @@ public class ColourSkinChanger : MonoBehaviour
 
     public Material CreateNewSkinMaterial(string newCharacterPrefabName)
     {
+#if UNITY_EDITOR
         Material newMaterial = new Material(skinMaterial);
         newMaterial.color = new Color(rCanal, gCanal, bCanal, 1);
 
         AssetDatabase.CreateAsset(newMaterial, "Assets/HYPERCASUAL - Stickman Customization/MaterialsCreator/" + "Skin_" + newCharacterPrefabName+ ".mat");
 
         return newMaterial;
+
+#else
+        return null;
+        #endif
     }
 
     private void OnDestroy()
