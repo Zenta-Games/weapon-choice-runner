@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class Finish : MonoBehaviour
 {
@@ -14,6 +16,12 @@ public class Finish : MonoBehaviour
     public int plusPlacedCubeCount = 0;
 
     public int requiredCubeCount = 0;
+
+    public TextMeshProUGUI cubeCountText;
+
+    public Image countSlider;
+
+    public Transform particles;
 
     private void Awake()
     {
@@ -47,6 +55,8 @@ public class Finish : MonoBehaviour
 
                 currentCraftableObject.InitPlacement(plusPlacedCubeCount);
 
+                UpdateUI();
+
                 return;
             }
         }
@@ -55,5 +65,21 @@ public class Finish : MonoBehaviour
     public void AtachCube(DynamicCube dynamicCube) 
     {
         currentCraftableObject.AtachCube(dynamicCube);
+
+        UpdateUI();
+    }
+
+    public void UpdateUI() 
+    {
+        float rate = (float) currentCraftableObject.cubePivots.FindAll(x => x.attachedCube != null).Count / (float) currentCraftableObject.cubePivots.Count;
+
+        countSlider.fillAmount = rate;
+
+        if (rate == 1f)
+        {
+            particles.gameObject.SetActive(true);
+        }
+
+        cubeCountText.text = currentCraftableObject.name + " " + currentCraftableObject.cubePivots.FindAll(x=>x.attachedCube != null).Count+"/"+currentCraftableObject.cubePivots.Count;
     }
 }

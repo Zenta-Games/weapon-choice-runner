@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour , IInitializable
 
     public List<Ground_Weapon_Selection> ground_Weapon_Selections;
 
+    public Animator animator;
+
     private void Awake()
     {
         Instance = this;
@@ -85,7 +87,7 @@ public class PlayerController : MonoBehaviour , IInitializable
 
             if (enemyManager.HaveClosestEnemy(model.transform.position))
             {
-                lerpedSpeed = Mathf.Lerp(lerpedSpeed,0, Time.deltaTime * 10f);
+                lerpedSpeed = Mathf.Lerp(lerpedSpeed,0, Time.deltaTime * 15f);
             }
 
             transform.Translate(Vector3.forward * Time.deltaTime * lerpedSpeed);
@@ -109,6 +111,8 @@ public class PlayerController : MonoBehaviour , IInitializable
                 onFinishState = true;
 
                 StartFinishState();
+
+                animator.Play("Finish");
             }
         }
     }
@@ -183,6 +187,28 @@ public class PlayerController : MonoBehaviour , IInitializable
 
                 movementSpeed = 2f;
 
+                switch (weaponType)
+                {
+                    case WeaponType.ROCK:
+                        animator.Play("Rock");
+                        break;
+                    case WeaponType.ARROW:
+                        animator.Play("Arrow");
+
+                        break;
+                    case WeaponType.BLADE:
+                        animator.Play("Blade");
+
+                        break;
+                    case WeaponType.UMBRELLA:
+                        
+                        break;
+                    case WeaponType.BRIDGE:
+                        break;
+                    default:
+                        break;
+                }
+
                 for (int i = 0; i < weapon.RequiredCubeCount; i++)
                 {
                     cubeManager.attachedCubes[0].cubePivot.attachedCube = null;
@@ -202,6 +228,14 @@ public class PlayerController : MonoBehaviour , IInitializable
 
                 weapon.Active();
             }
+        }
+    }
+
+    public IWeapon GetActiveWeapon
+    {
+        get
+        {
+          return  weapons.Find(x => x.WeaponState == WeaponState.ACTIVE);
         }
     }
 
@@ -248,6 +282,10 @@ public class PlayerController : MonoBehaviour , IInitializable
 
             PlayerPrefs.SetInt("placedCubeCount",placedCubeCount + 1);
         }
+
+        animator.Play("End");
+
+        cubeManager.countText.transform.parent.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(.5f);
 

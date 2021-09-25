@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using DG.Tweening;
 using TMPro;
+using Zenta.Core.Runtime.Managers;
 
 public class CubeManager : MonoBehaviour
 {
@@ -147,8 +148,17 @@ public class CubeManager : MonoBehaviour
     public void DetachCube(DynamicCube dynamicCube) 
     {
         attachedCubes.Remove(dynamicCube);
-
+        
         SetTextToCount();
+
+        if (attachedCubes.Count == 0)
+        {
+            GameManager.Instance.FailLevel();
+
+            PlayerController.Instance.animator.Play("Death");
+
+            countText.transform.parent.gameObject.SetActive(false);
+        }
     }
 
     private void AddCubes(int count) 

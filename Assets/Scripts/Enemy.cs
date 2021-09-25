@@ -53,7 +53,7 @@ public class Enemy : MonoBehaviour
 
         ActiveRagdoll();
 
-        Destroy(this.gameObject, 3f);
+        Destroy(this.gameObject, 2f);
 
         onDie?.Invoke();
     }
@@ -64,7 +64,7 @@ public class Enemy : MonoBehaviour
 
         ActiveRagdoll(damagePoint);
 
-        Destroy(this.gameObject, 3f);
+        Destroy(this.gameObject, 2f);
 
         onDie?.Invoke();
     }

@@ -52,6 +52,22 @@ namespace Zenta.Core.Runtime.UI.Panel.Panels
         {
             weaponContent.gameObject.SetActive(true);
 
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                int requiredCount = PlayerController.Instance.weapons.Find(x => x.WeaponType == buttons[i].weaponType).RequiredCubeCount;
+
+                int cubeCount = CubeManager.Instance.attachedCubeCount;
+
+                if (cubeCount > requiredCount)
+                {
+                    buttons[i].SetCanUse(true);
+                }
+                else
+                {
+                    buttons[i].SetCanUse(false);
+                }
+            }
+
             buttons.Find(x => x.weaponType == weaponType).animator.enabled = true;
         }
     }

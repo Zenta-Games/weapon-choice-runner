@@ -192,7 +192,6 @@ public class DynamicCube : MonoBehaviour
 
                 model.transform.localScale = Vector3.Slerp(model.transform.localScale, cubePivot.cubePoint.transform.localScale, Time.deltaTime * 10f);
             }
-
         }
     }
 

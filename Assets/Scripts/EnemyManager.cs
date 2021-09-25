@@ -9,11 +9,18 @@ public class EnemyManager : MonoBehaviour
 
     private List<Enemy> enemies;
 
+    private Boss boss;
+
     private void Awake()
     {
         Instance = this;
 
         enemies = GetComponentsInChildren<Enemy>().ToList();
+    }
+
+    private void Start()
+    {
+        boss = Boss.Instance;
     }
 
     public bool HaveClosestEnemy(Vector3 position)
@@ -31,6 +38,14 @@ public class EnemyManager : MonoBehaviour
             }
         }
 
+        if (boss != null)
+        {
+            if (Vector3.Distance(position, boss.transform.position) < 5f)
+            {
+                return true;
+            }
+        }
+        
         return false;
     }
 }

@@ -524,6 +524,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 1
   animator: {fileID: 2129409847}
+  activeImage: {fileID: 21300000, guid: 8d0900724c7269a4fa88ec1a105a251a, type: 3}
+  passiveImage: {fileID: 21300000, guid: 6d5083f636b5b67448424a39ef52a132, type: 3}
+  image: {fileID: 139980489190082017}
 --- !u!95 &2129409847
 Animator:
   serializedVersion: 3
@@ -756,6 +759,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 2
   animator: {fileID: 2129409843}
+  activeImage: {fileID: 21300000, guid: f680ceda2aeb44b49acbc9aee7ce13e0, type: 3}
+  passiveImage: {fileID: 21300000, guid: 91af0a991cc5c314b93e1ccd63de12cd, type: 3}
+  image: {fileID: 519183316129990489}
 --- !u!95 &2129409843
 Animator:
   serializedVersion: 3
@@ -909,6 +915,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 4
   animator: {fileID: 0}
+  activeImage: {fileID: 0}
+  passiveImage: {fileID: 0}
+  image: {fileID: 0}
 --- !u!1 &2737141810456077145
 GameObject:
   m_ObjectHideFlags: 0
@@ -1043,6 +1052,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 3
   animator: {fileID: 0}
+  activeImage: {fileID: 0}
+  passiveImage: {fileID: 0}
+  image: {fileID: 0}
 --- !u!1 &3204328099063948154
 GameObject:
   m_ObjectHideFlags: 0
@@ -1775,6 +1787,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponType: 0
   animator: {fileID: 2129409846}
+  activeImage: {fileID: 21300000, guid: 66d86c507940c5441884bb3a7c952379, type: 3}
+  passiveImage: {fileID: 21300000, guid: b628fa0d2b1272c4389193996610d621, type: 3}
+  image: {fileID: 7873425943955113801}
 --- !u!95 &2129409846
 Animator:
   serializedVersion: 3

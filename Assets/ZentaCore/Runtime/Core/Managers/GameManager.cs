@@ -289,8 +289,8 @@ namespace Zenta.Core.Runtime.Managers
         {
             if (ChangeState(GameState.Completed))
             {
-                IncreaseUserLevel();
                 Analytics.Analytics.CompleteEvent(Level);
+                IncreaseUserLevel();
             }
         }
 

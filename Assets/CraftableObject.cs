@@ -8,6 +8,8 @@ public class CraftableObject : MonoBehaviour
 {
     public List<CubePivot> cubePivots;
 
+    public string name;
+
     [Button("SetCubePivots")]
     public void SetCubePivots() 
     {
