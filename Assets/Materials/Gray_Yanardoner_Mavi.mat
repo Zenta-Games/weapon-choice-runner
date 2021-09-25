@@ -22,8 +22,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Gray_Yanardoner_Mavi
   m_Shader: {fileID: 4800000, guid: da8cbf846d45f7545928653e272925c0, type: 3}
-  m_ShaderKeywords: _ENERGYCONSERVATION_ON _RAMP_OFF _RIMLIGHTING _SPECULAR_SETUP
-    _TEXMODE_OFF _TOONRIM
+  m_ShaderKeywords: _ENERGYCONSERVATION_ON _ENVIRONMENTREFLECTIONS_OFF _RAMP_OFF
+    _RIMLIGHTING _SPECULAR_SETUP _TEXMODE_OFF _TOONRIM
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -79,7 +79,7 @@ Material:
     - _AlphaClip: 0
     - _AlphaFromMaskMap: 1
     - _Anisotropic: 0
-    - _Anisotropy: 0
+    - _Anisotropy: -0.295
     - _ApplyNormal: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -88,14 +88,14 @@ Material:
     - _Coverage: 0
     - _Cull: 2
     - _Culling: 0
-    - _Cutoff: 0.384
-    - _DiffuseFallOff: 0.326
-    - _DiffuseStep: -0.075
+    - _Cutoff: 0.401
+    - _DiffuseFallOff: 0.41
+    - _DiffuseStep: -0.953
     - _DstBlend: 0
     - _EnableMaskMap: 0
     - _EnableToonRim: 1
     - _EnergyConservation: 1
-    - _EnvironmentReflections: 1
+    - _EnvironmentReflections: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -104,7 +104,7 @@ Material:
     - _LuxBlend: 0
     - _LuxSurface: 0
     - _Metallic: 0
-    - _OcclusionStrength: 1
+    - _OcclusionStrength: 0.627
     - _QueueOffset: 0
     - _Ramp: 0
     - _ReadMask: 255
@@ -118,7 +118,7 @@ Material:
     - _ShadowBiasAdditional: 0
     - _ShadowFallOff: 0.75
     - _ShadowOffset: 1
-    - _Smoothness: 0.561
+    - _Smoothness: 0.632
     - _SmoothnessTextureChannel: 0
     - _SpecularFallOff: 0.422
     - _SpecularHighlights: 1

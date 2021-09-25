@@ -4,124 +4,121 @@ Shader "Hidden/BOXOPHOBIC/Atmospherics/Height Fog Global"
 {
 	Properties
 	{
-		[HideInInspector]_IsStandardPipeline("_IsStandardPipeline", Float) = 0
+		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
+		[HideInInspector] _EmissionColor("Emission Color", Color) = (1,1,1,1)
+		[HideInInspector]_IsUniversalPipeline("_IsUniversalPipeline", Float) = 0
 		[HideInInspector]_HeightFogGlobal("_HeightFogGlobal", Float) = 1
 		[HideInInspector]_IsHeightFogShader("_IsHeightFogShader", Float) = 1
 		[HideInInspector]_TransparentQueue("_TransparentQueue", Int) = 3000
 		[StyledBanner(Height Fog Global)]_TITLE("< TITLE >", Float) = 1
 
 	}
-	
+
 	SubShader
 	{
-		
-		
-		Tags { "RenderType"="Overlay" "Queue"="Overlay" }
-	LOD 0
+		LOD 0
 
-		CGINCLUDE
-		#pragma target 3.0
-		ENDCG
-		Blend SrcAlpha OneMinusSrcAlpha
+		
+		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Overlay" "Queue"="Overlay" }
+		
 		Cull Front
-		ColorMask RGBA
-		ZWrite Off
-		ZTest Always
-		
-		
+		HLSLINCLUDE
+		#pragma target 3.0
+		ENDHLSL
+
 		
 		Pass
 		{
-			Name "Unlit"
-			Tags { "LightMode"="ForwardBase" "PreviewType"="Skybox" }
-			CGPROGRAM
-
+			
+			Name "Forward"
+			Tags { "LightMode"="UniversalForward" }
+			
+			Blend SrcAlpha OneMinusSrcAlpha , One OneMinusSrcAlpha
+			ZWrite Off
+			ZTest Always
+			Offset 0,0
+			ColorMask RGBA
 			
 
-			#ifndef UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX
-			//only defining to not throw compilation error over Unity 5.5
-			#define UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)
-			#endif
+			HLSLPROGRAM
+			#define _RECEIVE_SHADOWS_OFF 1
+			#define ASE_SRP_VERSION 70108
+			#define REQUIRE_DEPTH_TEXTURE 1
+
+			#pragma prefer_hlslcc gles
+			#pragma exclude_renderers d3d11_9x
+
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma multi_compile_instancing
-			#include "UnityCG.cginc"
-			#include "UnityShaderVariables.cginc"
-			#include "Lighting.cginc"
-			#include "AutoLight.cginc"
-			#include "UnityStandardBRDF.cginc"
-			#define ASE_NEEDS_FRAG_WORLD_POSITION
+
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/UnityInstancing.hlsl"
+			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
+
+			#if ASE_SRP_VERSION <= 70108
+			#define REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR
+			#endif
+
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
+			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 			#pragma multi_compile AHF_DIRECTIONALMODE_OFF AHF_DIRECTIONALMODE_ON
 			#pragma multi_compile AHF_NOISEMODE_OFF AHF_NOISEMODE_PROCEDURAL3D
 
 
-			struct appdata
+			struct VertexInput
 			{
 				float4 vertex : POSITION;
-				float4 color : COLOR;
-				UNITY_VERTEX_INPUT_INSTANCE_ID
+				float3 ase_normal : NORMAL;
 				
-			};
-			
-			struct v2f
-			{
-				float4 vertex : SV_POSITION;
-#ifdef ASE_NEEDS_FRAG_WORLD_POSITION
-				float3 worldPos : TEXCOORD0;
-#endif
 				UNITY_VERTEX_INPUT_INSTANCE_ID
-				UNITY_VERTEX_OUTPUT_STEREO
-				float4 ase_texcoord1 : TEXCOORD1;
 			};
 
-			//This is a late directive
-			
-			uniform int _TransparentQueue;
-			uniform half _TITLE;
-			uniform half _HeightFogGlobal;
-			uniform half _IsHeightFogShader;
-			uniform half _IsStandardPipeline;
-			uniform half4 AHF_FogColor;
-			uniform half4 AHF_DirectionalColor;
-			UNITY_DECLARE_DEPTH_TEXTURE( _CameraDepthTexture );
+			struct VertexOutput
+			{
+				float4 clipPos : SV_POSITION;
+				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
+				float3 worldPos : TEXCOORD0;
+				#endif
+				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+				float4 shadowCoord : TEXCOORD1;
+				#endif
+				#ifdef ASE_FOG
+				float fogFactor : TEXCOORD2;
+				#endif
+				float4 ase_texcoord3 : TEXCOORD3;
+				UNITY_VERTEX_INPUT_INSTANCE_ID
+				UNITY_VERTEX_OUTPUT_STEREO
+			};
+
+			half4 AHF_FogColor;
+			half4 AHF_DirectionalColor;
 			uniform float4 _CameraDepthTexture_TexelSize;
-			uniform half AHF_DirectionalIntensity;
-			uniform half AHF_DirectionalModeBlend;
-			uniform half AHF_FogDistanceStart;
-			uniform half AHF_FogDistanceEnd;
-			uniform half3 AHF_FogAxisOption;
-			uniform half AHF_FogHeightEnd;
-			uniform half AHF_FogHeightStart;
-			uniform half AHF_NoiseScale;
-			uniform half3 AHF_NoiseSpeed;
-			uniform half AHF_NoiseDistanceEnd;
-			uniform half AHF_NoiseIntensity;
-			uniform half AHF_NoiseModeBlend;
-			uniform half AHF_SkyboxFogHeight;
-			uniform half AHF_SkyboxFogFill;
-			uniform half AHF_FogIntensity;
-			float2 UnStereo( float2 UV )
-			{
-				#if UNITY_SINGLE_PASS_STEREO
-				float4 scaleOffset = unity_StereoScaleOffset[ unity_StereoEyeIndex];
-				UV.xy = (UV.xy - scaleOffset.zw) / scaleOffset.xy;
-				#endif
-				return UV;
-			}
-			
-			inline float4 ASE_ComputeGrabScreenPos( float4 pos )
-			{
-				#if UNITY_UV_STARTS_AT_TOP
-				float scale = -1.0;
-				#else
-				float scale = 1.0;
-				#endif
-				float4 o = pos;
-				o.y = pos.w * 0.5f;
-				o.y = ( pos.y - o.y ) * _ProjectionParams.x * scale + o.y;
-				return o;
-			}
-			
+			half AHF_DirectionalIntensity;
+			half AHF_DirectionalModeBlend;
+			half AHF_FogDistanceStart;
+			half AHF_FogDistanceEnd;
+			half3 AHF_FogAxisOption;
+			half AHF_FogHeightEnd;
+			half AHF_FogHeightStart;
+			half AHF_NoiseScale;
+			half3 AHF_NoiseSpeed;
+			half AHF_NoiseDistanceEnd;
+			half AHF_NoiseIntensity;
+			half AHF_NoiseModeBlend;
+			half AHF_SkyboxFogHeight;
+			half AHF_SkyboxFogFill;
+			half AHF_FogIntensity;
+			CBUFFER_START( UnityPerMaterial )
+			half _IsHeightFogShader;
+			int _TransparentQueue;
+			half _TITLE;
+			half _HeightFogGlobal;
+			half _IsUniversalPipeline;
+			CBUFFER_END
+
+
 			float3 mod3D289( float3 x ) { return x - floor( x / 289.0 ) * 289.0; }
 			float4 mod3D289( float4 x ) { return x - floor( x / 289.0 ) * 289.0; }
 			float4 permute( float4 x ) { return mod3D289( ( x * 34.0 + 1.0 ) * x ); }
@@ -170,165 +167,200 @@ Shader "Hidden/BOXOPHOBIC/Atmospherics/Height Fog Global"
 			}
 			
 
-			
-			v2f vert ( appdata v )
+			VertexOutput vert ( VertexInput v  )
 			{
-				v2f o;
+				VertexOutput o = (VertexOutput)0;
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-				float3 temp_cast_0 = (( _IsStandardPipeline * 0.0 )).xxx;
+				float3 temp_cast_0 = (( _IsUniversalPipeline * 0.0 )).xxx;
 				
-				float4 ase_clipPos = UnityObjectToClipPos(v.vertex);
+				float4 ase_clipPos = TransformObjectToHClip((v.vertex).xyz);
 				float4 screenPos = ComputeScreenPos(ase_clipPos);
-				o.ase_texcoord1 = screenPos;
+				o.ase_texcoord3 = screenPos;
 				
-				float3 vertexValue = float3(0, 0, 0);
-				#if ASE_ABSOLUTE_VERTEX_POS
-				vertexValue = v.vertex.xyz;
-				#endif
-				vertexValue = temp_cast_0;
-				#if ASE_ABSOLUTE_VERTEX_POS
-				v.vertex.xyz = vertexValue;
+				#ifdef ASE_ABSOLUTE_VERTEX_POS
+					float3 defaultVertexValue = v.vertex.xyz;
 				#else
-				v.vertex.xyz += vertexValue;
+					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				o.vertex = UnityObjectToClipPos(v.vertex);
+				float3 vertexValue = temp_cast_0;
+				#ifdef ASE_ABSOLUTE_VERTEX_POS
+					v.vertex.xyz = vertexValue;
+				#else
+					v.vertex.xyz += vertexValue;
+				#endif
+				v.ase_normal = v.ase_normal;
 
-#ifdef ASE_NEEDS_FRAG_WORLD_POSITION
-				o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-#endif
+				float3 positionWS = TransformObjectToWorld( v.vertex.xyz );
+				float4 positionCS = TransformWorldToHClip( positionWS );
+
+				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
+				o.worldPos = positionWS;
+				#endif
+				#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR) && defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+				VertexPositionInputs vertexInput = (VertexPositionInputs)0;
+				vertexInput.positionWS = positionWS;
+				vertexInput.positionCS = positionCS;
+				o.shadowCoord = GetShadowCoord( vertexInput );
+				#endif
+				#ifdef ASE_FOG
+				o.fogFactor = ComputeFogFactor( positionCS.z );
+				#endif
+				o.clipPos = positionCS;
 				return o;
 			}
-			
-			fixed4 frag (v2f i ) : SV_Target
+
+			half4 frag ( VertexOutput IN  ) : SV_Target
 			{
-				UNITY_SETUP_INSTANCE_ID(i);
-				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				fixed4 finalColor;
-#ifdef ASE_NEEDS_FRAG_WORLD_POSITION
-				float3 WorldPosition = i.worldPos;
-#endif
-				float3 temp_output_2_0_g753 = (AHF_FogColor).rgb;
-				float3 gammaToLinear3_g753 = GammaToLinearSpace( temp_output_2_0_g753 );
-				#ifdef UNITY_COLORSPACE_GAMMA
-				float3 staticSwitch1_g753 = temp_output_2_0_g753;
-				#else
-				float3 staticSwitch1_g753 = gammaToLinear3_g753;
+				UNITY_SETUP_INSTANCE_ID( IN );
+				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX( IN );
+
+				#if defined(ASE_NEEDS_FRAG_WORLD_POSITION)
+				float3 WorldPosition = IN.worldPos;
 				#endif
-				float3 temp_output_34_0_g746 = staticSwitch1_g753;
-				float3 temp_output_2_0_g749 = (AHF_DirectionalColor).rgb;
-				float3 gammaToLinear3_g749 = GammaToLinearSpace( temp_output_2_0_g749 );
-				#ifdef UNITY_COLORSPACE_GAMMA
-				float3 staticSwitch1_g749 = temp_output_2_0_g749;
-				#else
-				float3 staticSwitch1_g749 = gammaToLinear3_g749;
+				float4 ShadowCoords = float4( 0, 0, 0, 0 );
+
+				#if defined(ASE_NEEDS_FRAG_SHADOWCOORDS)
+					#if defined(REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR)
+						ShadowCoords = IN.shadowCoord;
+					#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+						ShadowCoords = TransformWorldToShadowCoord( WorldPosition );
+					#endif
 				#endif
-				float4 screenPos = i.ase_texcoord1;
+				float3 temp_output_2_0_g826 = (AHF_FogColor).rgb;
+				float3 gammaToLinear3_g826 = FastSRGBToLinear( temp_output_2_0_g826 );
+				#ifdef UNITY_COLORSPACE_GAMMA
+				float3 staticSwitch1_g826 = temp_output_2_0_g826;
+				#else
+				float3 staticSwitch1_g826 = gammaToLinear3_g826;
+				#endif
+				float3 temp_output_34_0_g819 = staticSwitch1_g826;
+				float3 temp_output_2_0_g820 = (AHF_DirectionalColor).rgb;
+				float3 gammaToLinear3_g820 = FastSRGBToLinear( temp_output_2_0_g820 );
+				#ifdef UNITY_COLORSPACE_GAMMA
+				float3 staticSwitch1_g820 = temp_output_2_0_g820;
+				#else
+				float3 staticSwitch1_g820 = gammaToLinear3_g820;
+				#endif
+				float4 screenPos = IN.ase_texcoord3;
 				float4 ase_screenPosNorm = screenPos / screenPos.w;
 				ase_screenPosNorm.z = ( UNITY_NEAR_CLIP_VALUE >= 0 ) ? ase_screenPosNorm.z : ase_screenPosNorm.z * 0.5 + 0.5;
-				float2 UV38_g754 = ase_screenPosNorm.xy;
-				float2 localUnStereo38_g754 = UnStereo( UV38_g754 );
-				float2 break6_g754 = localUnStereo38_g754;
-				float4 ase_grabScreenPos = ASE_ComputeGrabScreenPos( screenPos );
-				float4 ase_grabScreenPosNorm = ase_grabScreenPos / ase_grabScreenPos.w;
-				float clampDepth3_g747 = SAMPLE_DEPTH_TEXTURE( _CameraDepthTexture, ase_grabScreenPosNorm.xy );
-				float ifLocalVar7_g747 = 0;
-				UNITY_BRANCH 
-				if( _ProjectionParams.x > 0.0 )
-				ifLocalVar7_g747 = ( 1.0 - clampDepth3_g747 );
-				else if( _ProjectionParams.x < 0.0 )
-				ifLocalVar7_g747 = clampDepth3_g747;
+				float2 break6_g834 = (ase_screenPosNorm).xy;
+				float clampDepth13_g825 = SHADERGRAPH_SAMPLE_SCENE_DEPTH( ase_screenPosNorm.xy );
 				#ifdef UNITY_REVERSED_Z
-				float staticSwitch9_g747 = ifLocalVar7_g747;
+				float staticSwitch14_g825 = clampDepth13_g825;
 				#else
-				float staticSwitch9_g747 = ( 1.0 - ifLocalVar7_g747 );
+				float staticSwitch14_g825 = ( 1.0 - clampDepth13_g825 );
 				#endif
-				float RawDepth89_g746 = staticSwitch9_g747;
-				float temp_output_41_0_g754 = RawDepth89_g746;
+				float RawDepth89_g819 = staticSwitch14_g825;
+				float temp_output_41_0_g834 = RawDepth89_g819;
 				#ifdef UNITY_REVERSED_Z
-				float staticSwitch5_g754 = ( 1.0 - temp_output_41_0_g754 );
+				float staticSwitch5_g834 = ( 1.0 - temp_output_41_0_g834 );
 				#else
-				float staticSwitch5_g754 = temp_output_41_0_g754;
+				float staticSwitch5_g834 = temp_output_41_0_g834;
 				#endif
-				float3 appendResult11_g754 = (float3(break6_g754.x , break6_g754.y , staticSwitch5_g754));
-				float4 appendResult16_g754 = (float4((appendResult11_g754*2.0 + -1.0) , 1.0));
-				float4 break18_g754 = mul( unity_CameraInvProjection, appendResult16_g754 );
-				float3 appendResult19_g754 = (float3(break18_g754.x , break18_g754.y , break18_g754.z));
-				float4 appendResult27_g754 = (float4(( ( appendResult19_g754 / break18_g754.w ) * half3(1,1,-1) ) , 1.0));
-				float4 break30_g754 = mul( unity_CameraToWorld, appendResult27_g754 );
-				float3 appendResult31_g754 = (float3(break30_g754.x , break30_g754.y , break30_g754.z));
-				float3 WorldPosition2_g746 = appendResult31_g754;
-				float3 normalizeResult5_g750 = normalize( ( WorldPosition2_g746 - _WorldSpaceCameraPos ) );
-				float3 worldSpaceLightDir = Unity_SafeNormalize(UnityWorldSpaceLightDir(WorldPosition));
-				float dotResult6_g750 = dot( normalizeResult5_g750 , worldSpaceLightDir );
-				half DirectionalMask30_g746 = ( (dotResult6_g750*0.5 + 0.5) * AHF_DirectionalIntensity * AHF_DirectionalModeBlend );
-				float3 lerpResult40_g746 = lerp( temp_output_34_0_g746 , staticSwitch1_g749 , DirectionalMask30_g746);
+				float3 appendResult11_g834 = (float3(break6_g834.x , break6_g834.y , staticSwitch5_g834));
+				float4 appendResult16_g834 = (float4((appendResult11_g834*2.0 + -1.0) , 1.0));
+				float4 break18_g834 = mul( unity_CameraInvProjection, appendResult16_g834 );
+				float3 appendResult19_g834 = (float3(break18_g834.x , break18_g834.y , break18_g834.z));
+				float4 appendResult27_g834 = (float4(( ( appendResult19_g834 / break18_g834.w ) * half3(1,1,-1) ) , 1.0));
+				float4 break30_g834 = mul( unity_CameraToWorld, appendResult27_g834 );
+				float3 appendResult31_g834 = (float3(break30_g834.x , break30_g834.y , break30_g834.z));
+				float3 WorldPosition2_g819 = appendResult31_g834;
+				float3 normalizeResult5_g822 = normalize( ( WorldPosition2_g819 - _WorldSpaceCameraPos ) );
+				float dotResult6_g822 = dot( normalizeResult5_g822 , SafeNormalize(_MainLightPosition.xyz) );
+				half DirectionalMask30_g819 = ( (dotResult6_g822*0.5 + 0.5) * AHF_DirectionalIntensity * AHF_DirectionalModeBlend );
+				float3 lerpResult40_g819 = lerp( temp_output_34_0_g819 , staticSwitch1_g820 , DirectionalMask30_g819);
 				#if defined(AHF_DIRECTIONALMODE_OFF)
-				float3 staticSwitch45_g746 = temp_output_34_0_g746;
+				float3 staticSwitch45_g819 = temp_output_34_0_g819;
 				#elif defined(AHF_DIRECTIONALMODE_ON)
-				float3 staticSwitch45_g746 = lerpResult40_g746;
+				float3 staticSwitch45_g819 = lerpResult40_g819;
 				#else
-				float3 staticSwitch45_g746 = temp_output_34_0_g746;
+				float3 staticSwitch45_g819 = temp_output_34_0_g819;
 				#endif
-				float temp_output_7_0_g752 = AHF_FogDistanceStart;
-				half FogDistanceMask12_g746 = saturate( ( ( distance( WorldPosition2_g746 , _WorldSpaceCameraPos ) - temp_output_7_0_g752 ) / ( AHF_FogDistanceEnd - temp_output_7_0_g752 ) ) );
-				float3 break12_g755 = ( WorldPosition2_g746 * AHF_FogAxisOption );
-				float temp_output_7_0_g756 = AHF_FogHeightEnd;
-				half FogHeightMask16_g746 = saturate( ( ( ( break12_g755.x + break12_g755.y + break12_g755.z ) - temp_output_7_0_g756 ) / ( AHF_FogHeightStart - temp_output_7_0_g756 ) ) );
-				float temp_output_29_0_g746 = ( FogDistanceMask12_g746 * FogHeightMask16_g746 );
-				float simplePerlin3D15_g757 = snoise( ( ( WorldPosition2_g746 * ( 1.0 / AHF_NoiseScale ) ) + ( -AHF_NoiseSpeed * _Time.y ) ) );
-				float temp_output_7_0_g761 = AHF_NoiseDistanceEnd;
-				half NoiseDistanceMask7_g746 = saturate( ( ( distance( WorldPosition2_g746 , _WorldSpaceCameraPos ) - temp_output_7_0_g761 ) / ( 0.0 - temp_output_7_0_g761 ) ) );
-				float lerpResult20_g757 = lerp( 1.0 , (simplePerlin3D15_g757*0.5 + 0.5) , ( NoiseDistanceMask7_g746 * AHF_NoiseIntensity * AHF_NoiseModeBlend ));
-				half NoiseSimplex3D24_g746 = lerpResult20_g757;
+				
+				float temp_output_7_0_g824 = AHF_FogDistanceStart;
+				half FogDistanceMask12_g819 = saturate( ( ( distance( WorldPosition2_g819 , _WorldSpaceCameraPos ) - temp_output_7_0_g824 ) / ( AHF_FogDistanceEnd - temp_output_7_0_g824 ) ) );
+				float3 break12_g828 = ( WorldPosition2_g819 * AHF_FogAxisOption );
+				float temp_output_7_0_g829 = AHF_FogHeightEnd;
+				half FogHeightMask16_g819 = saturate( ( ( ( break12_g828.x + break12_g828.y + break12_g828.z ) - temp_output_7_0_g829 ) / ( AHF_FogHeightStart - temp_output_7_0_g829 ) ) );
+				float temp_output_29_0_g819 = ( FogDistanceMask12_g819 * FogHeightMask16_g819 );
+				float simplePerlin3D15_g827 = snoise( ( ( WorldPosition2_g819 * ( 1.0 / AHF_NoiseScale ) ) + ( -AHF_NoiseSpeed * _TimeParameters.x ) ) );
+				float temp_output_7_0_g833 = AHF_NoiseDistanceEnd;
+				half NoiseDistanceMask7_g819 = saturate( ( ( distance( WorldPosition2_g819 , _WorldSpaceCameraPos ) - temp_output_7_0_g833 ) / ( 0.0 - temp_output_7_0_g833 ) ) );
+				float lerpResult20_g827 = lerp( 1.0 , (simplePerlin3D15_g827*0.5 + 0.5) , ( NoiseDistanceMask7_g819 * AHF_NoiseIntensity * AHF_NoiseModeBlend ));
+				half NoiseSimplex3D24_g819 = lerpResult20_g827;
 				#if defined(AHF_NOISEMODE_OFF)
-				float staticSwitch42_g746 = temp_output_29_0_g746;
+				float staticSwitch42_g819 = temp_output_29_0_g819;
 				#elif defined(AHF_NOISEMODE_PROCEDURAL3D)
-				float staticSwitch42_g746 = ( temp_output_29_0_g746 * NoiseSimplex3D24_g746 );
+				float staticSwitch42_g819 = ( temp_output_29_0_g819 * NoiseSimplex3D24_g819 );
 				#else
-				float staticSwitch42_g746 = temp_output_29_0_g746;
+				float staticSwitch42_g819 = temp_output_29_0_g819;
 				#endif
-				float3 normalizeResult25_g758 = normalize( WorldPosition2_g746 );
-				float3 break22_g758 = ( normalizeResult25_g758 * AHF_FogAxisOption );
-				float temp_output_7_0_g759 = AHF_SkyboxFogHeight;
-				float lerpResult17_g758 = lerp( saturate( ( ( abs( ( break22_g758.x + break22_g758.y + break22_g758.z ) ) - temp_output_7_0_g759 ) / ( 0.0 - temp_output_7_0_g759 ) ) ) , 1.0 , AHF_SkyboxFogFill);
-				half SkyboxFogHeightMask108_g746 = lerpResult17_g758;
-				float temp_output_6_0_g748 = RawDepth89_g746;
+				float3 normalizeResult25_g830 = normalize( WorldPosition2_g819 );
+				float3 break22_g830 = ( normalizeResult25_g830 * AHF_FogAxisOption );
+				float temp_output_7_0_g831 = AHF_SkyboxFogHeight;
+				float lerpResult17_g830 = lerp( saturate( ( ( abs( ( break22_g830.x + break22_g830.y + break22_g830.z ) ) - temp_output_7_0_g831 ) / ( 0.0 - temp_output_7_0_g831 ) ) ) , 1.0 , AHF_SkyboxFogFill);
+				half SkyboxFogHeightMask108_g819 = lerpResult17_g830;
+				float temp_output_6_0_g821 = RawDepth89_g819;
 				#ifdef UNITY_REVERSED_Z
-				float staticSwitch11_g748 = temp_output_6_0_g748;
+				float staticSwitch11_g821 = temp_output_6_0_g821;
 				#else
-				float staticSwitch11_g748 = ( 1.0 - temp_output_6_0_g748 );
+				float staticSwitch11_g821 = ( 1.0 - temp_output_6_0_g821 );
 				#endif
-				half SkyboxMask95_g746 = ( 1.0 - ceil( staticSwitch11_g748 ) );
-				float lerpResult112_g746 = lerp( staticSwitch42_g746 , SkyboxFogHeightMask108_g746 , SkyboxMask95_g746);
-				float temp_output_43_0_g746 = ( lerpResult112_g746 * AHF_FogIntensity );
-				float4 appendResult114_g746 = (float4(staticSwitch45_g746 , temp_output_43_0_g746));
+				half SkyboxMask95_g819 = ( 1.0 - ceil( staticSwitch11_g821 ) );
+				float lerpResult112_g819 = lerp( staticSwitch42_g819 , SkyboxFogHeightMask108_g819 , SkyboxMask95_g819);
+				float temp_output_43_0_g819 = ( lerpResult112_g819 * AHF_FogIntensity );
 				
-				
-				finalColor = appendResult114_g746;
-				return finalColor;
+				float3 BakedAlbedo = 0;
+				float3 BakedEmission = 0;
+				float3 Color = staticSwitch45_g819;
+				float Alpha = temp_output_43_0_g819;
+				float AlphaClipThreshold = 0.5;
+
+				#ifdef _ALPHATEST_ON
+					clip( Alpha - AlphaClipThreshold );
+				#endif
+
+				#ifdef ASE_FOG
+					Color = MixFog( Color, IN.fogFactor );
+				#endif
+
+				#ifdef LOD_FADE_CROSSFADE
+					LODDitheringTransition( IN.clipPos.xyz, unity_LODFade.x );
+				#endif
+
+				return half4( Color, Alpha );
 			}
-			ENDCG
+
+			ENDHLSL
 		}
+
+	
 	}
 	
-	
+	Fallback "Hidden/InternalErrorShader"
 	
 }
 /*ASEBEGIN
 Version=17802
-1927;7;1906;1014;4004.13;5134.83;1;True;False
-Node;AmplifyShaderEditor.RangedFloatNode;879;-3136,-4864;Half;False;Property;_HeightFogGlobal;_HeightFogGlobal;4;1;[HideInInspector];Create;False;0;0;True;0;1;1;1;1;0;1;FLOAT;0
+1927;7;1906;1015;4223.792;5028.447;1;True;False
 Node;AmplifyShaderEditor.RangedFloatNode;885;-2912,-4864;Half;False;Property;_IsHeightFogShader;_IsHeightFogShader;5;1;[HideInInspector];Create;False;0;0;True;0;1;1;1;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;915;-3328,-4480;Inherit;False;Is Pipeline;0;;762;6a59a34c4be5db64ca90ee69227573b8;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.IntNode;891;-2656,-4864;Float;False;Property;_TransparentQueue;_TransparentQueue;6;1;[HideInInspector];Create;False;0;0;True;0;3000;0;0;1;INT;0
 Node;AmplifyShaderEditor.RangedFloatNode;892;-3328,-4864;Half;False;Property;_TITLE;< TITLE >;7;0;Create;True;0;0;True;1;StyledBanner(Height Fog Global);1;1;1;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;924;-3328,-4608;Inherit;False;Base;-1;;746;7ce331de1e1cd8c4d83adad8f3b33ab6;2,99,1,116,1;0;3;FLOAT4;113;FLOAT3;86;FLOAT;87
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;383;-3072,-4608;Float;False;True;-1;2;;0;1;Hidden/BOXOPHOBIC/Atmospherics/Height Fog Global;0770190933193b94aaa3065e307002fa;True;Unlit;0;0;Unlit;2;True;2;5;False;-1;10;False;-1;0;5;False;-1;10;False;-1;True;0;False;-1;0;False;-1;True;False;True;1;False;-1;True;True;True;True;True;0;False;-1;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;2;False;594;True;7;False;595;True;False;0;False;500;1000;False;500;True;2;RenderType=Overlay=RenderType;Queue=Overlay=Queue=0;True;2;0;False;False;False;False;False;False;False;False;False;True;2;LightMode=ForwardBase;PreviewType=Skybox;False;0;;0;0;Standard;1;Vertex Position,InvertActionOnDeselection;1;0;1;True;False;;0
+Node;AmplifyShaderEditor.RangedFloatNode;879;-3136,-4864;Half;False;Property;_HeightFogGlobal;_HeightFogGlobal;4;1;[HideInInspector];Create;False;0;0;True;0;1;1;1;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;948;-3328,-4416;Inherit;False;Is Pipeline;0;;802;2b33d0c660fbdb24c98bea96428031b0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode;950;-3328,-4608;Inherit;False;Base;-1;;819;7ce331de1e1cd8c4d83adad8f3b33ab6;2,116,1,99,1;0;3;FLOAT4;113;FLOAT3;86;FLOAT;87
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;929;-3072,-4608;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;3;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;Meta;0;4;Meta;0;False;False;False;True;0;False;-1;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;False;False;False;True;2;False;-1;False;False;False;False;False;True;1;LightMode=Meta;False;0;Hidden/InternalErrorShader;0;0;Standard;0;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;925;-3072,-4544;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;3;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;ExtraPrePass;0;0;ExtraPrePass;5;False;False;False;True;0;False;-1;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;True;1;1;False;-1;0;False;-1;0;1;False;-1;0;False;-1;False;False;True;0;False;-1;True;True;True;True;True;0;False;-1;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;1;False;-1;True;3;False;-1;True;True;0;False;-1;0;False;-1;True;0;False;0;Hidden/InternalErrorShader;0;0;Standard;0;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;927;-3072,-4608;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;3;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;True;0;False;-1;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;False;False;False;False;False;False;True;1;False;-1;True;3;False;-1;False;True;1;LightMode=ShadowCaster;False;0;Hidden/InternalErrorShader;0;0;Standard;0;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;928;-3072,-4608;Float;False;False;-1;2;UnityEditor.ShaderGraph.PBRMasterGUI;0;3;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;DepthOnly;0;3;DepthOnly;0;False;False;False;True;0;False;-1;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;0;0;False;False;False;False;True;False;False;False;False;0;False;-1;False;True;1;False;-1;False;False;True;1;LightMode=DepthOnly;False;0;Hidden/InternalErrorShader;0;0;Standard;0;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;926;-2944,-4608;Float;False;True;-1;2;;0;3;Hidden/BOXOPHOBIC/Atmospherics/Height Fog Global;2992e84f91cbeb14eab234972e07ea9d;True;Forward;0;1;Forward;7;False;False;False;True;1;False;-1;False;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Overlay=RenderType;Queue=Overlay=Queue=0;True;2;0;True;1;5;False;-1;10;False;-1;1;1;False;-1;10;False;-1;False;False;False;True;True;True;True;True;0;False;-1;True;False;255;False;-1;255;False;-1;255;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;7;False;-1;1;False;-1;1;False;-1;1;False;-1;True;2;False;-1;True;7;False;-1;True;False;0;False;-1;0;False;-1;True;1;LightMode=UniversalForward;False;0;Hidden/InternalErrorShader;0;0;Standard;11;Surface;1;  Blend;0;Two Sided;2;Cast Shadows;0;Receive Shadows;0;GPU Instancing;0;LOD CrossFade;0;Built-in Fog;0;Meta Pass;0;Extra Pre Pass;0;Vertex Position,InvertActionOnDeselection;1;0;5;False;True;False;False;False;False;;0
 Node;AmplifyShaderEditor.CommentaryNode;880;-3328,-4992;Inherit;False;919.8825;100;Drawers;0;;1,0.475862,0,1;0;0
-WireConnection;383;0;924;113
-WireConnection;383;1;915;0
+WireConnection;926;2;950;86
+WireConnection;926;3;950;87
+WireConnection;926;5;948;0
 ASEEND*/
-//CHKSM=47B1F5367F20C7A7F1B20497902347F2A29DA2BF
+//CHKSM=A796E65637F75C12DFB2FD5266F3E5C34BC7BCA3
