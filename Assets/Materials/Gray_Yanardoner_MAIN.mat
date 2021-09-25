@@ -113,7 +113,7 @@ Material:
     - _RimFrequency: 4.93
     - _RimMinPower: 9.73
     - _RimPerPositionFrequency: 1
-    - _RimPower: 0.17
+    - _RimPower: 0.42
     - _ShadoBiasDirectional: 0
     - _ShadowBiasAdditional: 0
     - _ShadowFallOff: 0.75
