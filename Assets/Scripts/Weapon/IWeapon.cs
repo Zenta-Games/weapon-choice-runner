@@ -11,6 +11,8 @@ public interface IWeapon
 
     WeaponState WeaponState { get; set; }
 
+    Color weaponColor { get; }
+
     bool CanActive();
 
     int RequiredCubeCount { get; }

@@ -21,6 +21,10 @@ public class WE_Rock : MonoBehaviour , IWeapon
     public float actionTime;
     public float ActionTime { get { return actionTime; } }
 
+    public Color weaponColor { get { return WeaponColor; } }
+
+    public Color WeaponColor;
+
     public bool CanActive()
     {
         return true;

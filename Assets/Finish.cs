@@ -23,6 +23,8 @@ public class Finish : MonoBehaviour
 
     public Transform particles;
 
+    public GameObject canvas;
+
     private void Awake()
     {
         Instance = this;
@@ -67,6 +69,8 @@ public class Finish : MonoBehaviour
         currentCraftableObject.AtachCube(dynamicCube);
 
         UpdateUI();
+
+        canvas.SetActive(true);
     }
 
     public void UpdateUI() 

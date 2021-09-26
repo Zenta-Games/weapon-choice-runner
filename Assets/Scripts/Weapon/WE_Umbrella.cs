@@ -19,6 +19,10 @@ public class WE_Umbrella : MonoBehaviour ,IWeapon
 
     public float actionTime;
     public float ActionTime { get { return actionTime; } }
+
+    public Color weaponColor { get { return weaponColor; } }
+
+    public Color WeaponColor;
     public bool CanActive()
     {
         return true;

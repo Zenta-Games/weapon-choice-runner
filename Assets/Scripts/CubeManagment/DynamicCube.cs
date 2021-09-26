@@ -14,6 +14,12 @@ public class DynamicCube : MonoBehaviour
     private BoxCollider boxCollider;
 
     private Transform model;
+
+    public Material baseMaterial;
+
+    public Material trailMaterial;
+
+    private Color targetColor = new Color(0.8705882f, 0.8705882f, 0.8705882f);
     
     public CubeState CubeState 
     {
@@ -36,6 +42,12 @@ public class DynamicCube : MonoBehaviour
         CubeState = CubeState.COLLECTABLE;
 
         model = transform.GetChild(0);
+
+        baseMaterial = model.GetComponent<MeshRenderer>().material;
+
+        baseMaterial.color = targetColor;
+
+        trailMaterial = GetComponent<TrailRenderer>().materials[0];
     }
 
     Vector3 velocity;
@@ -143,11 +155,13 @@ public class DynamicCube : MonoBehaviour
         cubePivot = pivotTarget;
     }
 
-    public void SetWeapon(CubePivot pivotTarget) 
+    public void SetWeapon(CubePivot pivotTarget,IWeapon weapon) 
     {
         cubePivot = pivotTarget;
 
         cubePivot.attachedCube = this;
+
+        targetColor = weapon.weaponColor;
 
         AttachWeapon();
     }
@@ -192,6 +206,16 @@ public class DynamicCube : MonoBehaviour
 
                 model.transform.localScale = Vector3.Slerp(model.transform.localScale, cubePivot.cubePoint.transform.localScale, Time.deltaTime * 10f);
             }
+        }
+
+        if (baseMaterial != null)
+        {
+            baseMaterial.color = Color.Lerp(baseMaterial.color, targetColor, Time.deltaTime * 20f);
+        }
+
+        if (trailMaterial != null)
+        {
+            trailMaterial.color = Color.Lerp(trailMaterial.color, new Color(targetColor.r, targetColor.g, targetColor.b, .4f), Time.deltaTime * 20f);
         }
     }
 

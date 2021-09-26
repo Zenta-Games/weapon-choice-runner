@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour , IInitializable
                 {
                     cubeManager.attachedCubes[0].cubePivot.attachedCube = null;
 
-                    cubeManager.attachedCubes[0].SetWeapon(weapon.CubePivots[i]);
+                    cubeManager.attachedCubes[0].SetWeapon(weapon.CubePivots[i],weapon);
 
                     cubeManager.attachedCubes.RemoveAt(0);
 
