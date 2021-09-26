@@ -208,15 +208,15 @@ public class DynamicCube : MonoBehaviour
             }
         }
 
-        if (baseMaterial != null)
-        {
-            baseMaterial.color = Color.Lerp(baseMaterial.color, targetColor, Time.deltaTime * 20f);
-        }
+        //if (baseMaterial != null)
+        //{
+        //    baseMaterial.color = Color.Lerp(baseMaterial.color, targetColor, Time.deltaTime * 20f);
+        //}
 
-        if (trailMaterial != null)
-        {
-            trailMaterial.color = Color.Lerp(trailMaterial.color, new Color(targetColor.r, targetColor.g, targetColor.b, .4f), Time.deltaTime * 20f);
-        }
+        //if (trailMaterial != null)
+        //{
+        //    trailMaterial.color = Color.Lerp(trailMaterial.color, new Color(targetColor.r, targetColor.g, targetColor.b, .4f), Time.deltaTime * 20f);
+        //}
     }
 
     private void OnTriggerEnter(Collider other)
