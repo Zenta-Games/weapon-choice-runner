@@ -1,12 +1,12 @@
-﻿using System.Collections;
+﻿using NaughtyAttributes;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
-using Zenta.Core.Runtime.Managers;
-using Zenta.Core.Runtime.UI.Panel.Panels;
+using UnityEngine;
 using Zenta.Core.Runtime;
 using Zenta.Core.Runtime.Interfaces;
-using NaughtyAttributes;
+using Zenta.Core.Runtime.Managers;
+using Zenta.Core.Runtime.UI.Panel.Panels;
 
 public class PlayerController : MonoBehaviour , IInitializable
 {
@@ -77,7 +77,8 @@ public class PlayerController : MonoBehaviour , IInitializable
 
     private float lerpedSpeed = 0f;
 
-    private bool onFinishState = false;
+    [HideInInspector]
+    public bool onFinishState = false;
 
     private void Update()
     {

@@ -153,11 +153,14 @@ public class CubeManager : MonoBehaviour
 
         if (attachedCubes.Count == 0)
         {
-            GameManager.Instance.FailLevel();
+            if (PlayerController.Instance.onFinishState == false)
+            {
+                GameManager.Instance.FailLevel();
 
-            PlayerController.Instance.animator.Play("Death");
+                PlayerController.Instance.animator.Play("Death");
 
-            countText.transform.parent.gameObject.SetActive(false);
+                countText.transform.parent.gameObject.SetActive(false);
+            }
         }
     }
 
