@@ -42,12 +42,6 @@ public class DynamicCube : MonoBehaviour
         CubeState = CubeState.COLLECTABLE;
 
         model = transform.GetChild(0);
-
-        baseMaterial = model.GetComponent<MeshRenderer>().material;
-
-        baseMaterial.color = targetColor;
-
-        trailMaterial = GetComponent<TrailRenderer>().materials[0];
     }
 
     Vector3 velocity;

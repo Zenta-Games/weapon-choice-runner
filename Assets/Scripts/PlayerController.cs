@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour , IInitializable
         }
         else
         {
-            StartCoroutine(SetTimeScale(0, .05f));
+            Time.timeScale = .05f;
 
             playingPanel.JiggleTargetWeapon(weaponType);
         }
@@ -136,7 +136,6 @@ public class PlayerController : MonoBehaviour , IInitializable
     {
         yield return new WaitForSeconds(delayTime);
 
-        Time.timeScale = timeScale;
     }
 
     private Ground_Weapon_Selection GetClosestWeapon()
