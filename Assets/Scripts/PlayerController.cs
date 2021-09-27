@@ -119,9 +119,24 @@ public class PlayerController : MonoBehaviour , IInitializable
 
     private void ReadyWeapon(WeaponType weaponType) 
     {
-        Time.timeScale = .05f;
 
-        playingPanel.JiggleTargetWeapon(weaponType);
+        if (cubeManager.attachedCubeCount < weapons.Find(x=> x.WeaponType == WeaponType.BLADE).RequiredCubeCount)
+        {
+
+        }
+        else
+        {
+            StartCoroutine(SetTimeScale(0, .05f));
+
+            playingPanel.JiggleTargetWeapon(weaponType);
+        }
+    }
+
+    private IEnumerator SetTimeScale(float delayTime,float timeScale) 
+    {
+        yield return new WaitForSeconds(delayTime);
+
+        Time.timeScale = timeScale;
     }
 
     private Ground_Weapon_Selection GetClosestWeapon()
