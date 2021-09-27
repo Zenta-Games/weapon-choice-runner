@@ -15,8 +15,6 @@ public class DynamicCube : MonoBehaviour
 
     private Transform model;
 
-    public Material trailMaterial;
-
     private Color targetColor = new Color(.99f, .474f, .65f);
     
     public CubeState CubeState 
@@ -40,8 +38,6 @@ public class DynamicCube : MonoBehaviour
         CubeState = CubeState.COLLECTABLE;
 
         model = transform.GetChild(0);
-
-        trailMaterial = GetComponent<TrailRenderer>().materials[0];
     }
 
     Vector3 velocity;
@@ -198,16 +194,6 @@ public class DynamicCube : MonoBehaviour
 
                 model.transform.localScale = Vector3.Slerp(model.transform.localScale, cubePivot.cubePoint.transform.localScale, Time.deltaTime * 10f);
             }
-        }
-
-        //if (baseMaterial != null)
-        //{
-        //    baseMaterial.color = Color.Lerp(baseMaterial.color, targetColor, Time.deltaTime * 20f);
-        //}
-
-        if (trailMaterial != null)
-        {
-            trailMaterial.color = Color.Lerp(trailMaterial.color, new Color(targetColor.r, targetColor.g, targetColor.b, .4f), Time.deltaTime * 20f);
         }
     }
 
