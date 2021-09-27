@@ -49577,13 +49577,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.47434682, g: 0.6509434, b: 0.08904416, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 849ae9794b379184fa8aac8ec67b126a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 919bb9d5f7b5f234db980131c10c4050, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -49661,18 +49661,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6427639119727453764}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.3}
-  m_LocalScale: {x: 0.60783, y: 2.220479, z: 0.60783}
+  m_LocalRotation: {x: -0.12752709, y: -0, z: -0, w: 0.9918351}
+  m_LocalPosition: {x: 0, y: 0, z: -0.21}
+  m_LocalScale: {x: 0.7846875, y: 1.544812, z: 1}
   m_Children:
   - {fileID: 8280503398322694558}
   - {fileID: 6842992007038198984}
   m_Father: {fileID: 3969203694296787498}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -14.653001, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -3.14}
+  m_AnchoredPosition: {x: 0, y: -1.03}
   m_SizeDelta: {x: 0, y: -13.346954}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4972585021761819929
@@ -49702,7 +49702,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 849ae9794b379184fa8aac8ec67b126a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 941e19a839d81c0459fbad7bffbb28b9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -49786,8 +49786,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -49864,7 +49864,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3969203694296787498
 RectTransform:
   m_ObjectHideFlags: 0
@@ -49874,7 +49874,7 @@ RectTransform:
   m_GameObject: {fileID: 8730488846538836316}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 5.52}
-  m_LocalScale: {x: 0.775, y: 0.875, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 222804789300900436}
   m_Father: {fileID: 1304836726283550274}
