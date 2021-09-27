@@ -15,11 +15,9 @@ public class DynamicCube : MonoBehaviour
 
     private Transform model;
 
-    public Material baseMaterial;
-
     public Material trailMaterial;
 
-    private Color targetColor = new Color(0.8705882f, 0.8705882f, 0.8705882f);
+    private Color targetColor = new Color(.99f, .474f, .65f);
     
     public CubeState CubeState 
     {
@@ -42,6 +40,8 @@ public class DynamicCube : MonoBehaviour
         CubeState = CubeState.COLLECTABLE;
 
         model = transform.GetChild(0);
+
+        trailMaterial = GetComponent<TrailRenderer>().materials[0];
     }
 
     Vector3 velocity;
@@ -155,8 +155,6 @@ public class DynamicCube : MonoBehaviour
 
         cubePivot.attachedCube = this;
 
-        targetColor = weapon.weaponColor;
-
         AttachWeapon();
     }
 
@@ -207,10 +205,10 @@ public class DynamicCube : MonoBehaviour
         //    baseMaterial.color = Color.Lerp(baseMaterial.color, targetColor, Time.deltaTime * 20f);
         //}
 
-        //if (trailMaterial != null)
-        //{
-        //    trailMaterial.color = Color.Lerp(trailMaterial.color, new Color(targetColor.r, targetColor.g, targetColor.b, .4f), Time.deltaTime * 20f);
-        //}
+        if (trailMaterial != null)
+        {
+            trailMaterial.color = Color.Lerp(trailMaterial.color, new Color(targetColor.r, targetColor.g, targetColor.b, .4f), Time.deltaTime * 20f);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
