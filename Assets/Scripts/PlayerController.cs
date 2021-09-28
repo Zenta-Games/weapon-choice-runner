@@ -125,10 +125,9 @@ public class PlayerController : MonoBehaviour , IInitializable
 
     private void ReadyWeapon(WeaponType weaponType) 
     {
-
         if (cubeManager.attachedCubeCount < weapons.Find(x=> x.WeaponType == WeaponType.BLADE).RequiredCubeCount)
         {
-
+            currentWeapon = null;
         }
         else
         {
