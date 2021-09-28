@@ -272,19 +272,22 @@ public class PlayerController : MonoBehaviour , IInitializable
             }
             else
             {
-                cubeManager.attachedCubes[0].cubePivot.attachedCube = null;
+                if (cubeManager.attachedCubes[0].cubePivot != null)
+                {
+                    cubeManager.attachedCubes[0].cubePivot.attachedCube = null;
 
-                finish.AtachCube(cubeManager.attachedCubes[0]);
+                    finish.AtachCube(cubeManager.attachedCubes[0]);
 
-                cubeManager.attachedCubes.RemoveAt(0);
+                    cubeManager.attachedCubes.RemoveAt(0);
 
-                yield return new WaitForEndOfFrame();
+                    yield return new WaitForEndOfFrame();
 
-                cubeManager.SetTextToCount();
+                    cubeManager.SetTextToCount();
 
-                int placedCubeCount = PlayerPrefs.GetInt("placedCubeCount");
+                    int placedCubeCount = PlayerPrefs.GetInt("placedCubeCount");
 
-                PlayerPrefs.SetInt("placedCubeCount", placedCubeCount + 1);
+                    PlayerPrefs.SetInt("placedCubeCount", placedCubeCount + 1);
+                }
             }
         }
 
