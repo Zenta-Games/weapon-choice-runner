@@ -227,7 +227,9 @@ public class PlayerController : MonoBehaviour , IInitializable
 
                 for (int i = 0; i < weapon.RequiredCubeCount; i++)
                 {
-                    cubeManager.attachedCubes[0].cubePivot.attachedCube = null;
+					if(cubeManager.attachedCubes[0].cubePivot != null)
+					{
+						 cubeManager.attachedCubes[0].cubePivot.attachedCube = null;
 
                     cubeManager.attachedCubes[0].SetWeapon(weapon.CubePivots[i],weapon);
 
@@ -236,6 +238,9 @@ public class PlayerController : MonoBehaviour , IInitializable
                     yield return new WaitForEndOfFrame();
 
                     cubeManager.SetTextToCount();
+					}
+					
+                   
                 }
 
                 yield return new WaitForSeconds(.1f);
