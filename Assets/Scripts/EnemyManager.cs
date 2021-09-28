@@ -35,7 +35,7 @@ public class EnemyManager : MonoBehaviour
 
         if (PlayerController.Instance.currentWeapon != null)
         {
-            requiredDistance = 30f;
+            requiredDistance = 50f;
         }
         
         for (int i = 0; i < enemies.Count; i++)

@@ -26,6 +26,8 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         playerController = PlayerController.Instance;
+
+        agent.speed = 5f;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -88,7 +90,7 @@ public class Enemy : MonoBehaviour
 
             if (playerController.currentWeapon != null)
             {
-                followDistance = 30f;
+                followDistance = 50f;
             }
             else
             {

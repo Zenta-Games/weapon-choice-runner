@@ -84,16 +84,19 @@ public class PlayerController : MonoBehaviour , IInitializable
     {
         if (GameManager.Instance.State == GameState.Playing && onFinishState == false)
         {
-            lerpedSpeed = Mathf.Lerp(lerpedSpeed,movementSpeed,Time.deltaTime * 10f);
-
             if (enemyManager.HaveClosestEnemy(model.transform.position))
             {
-                lerpedSpeed = Mathf.Lerp(lerpedSpeed, 0, Time.deltaTime * 15f);
+                lerpedSpeed = Mathf.Lerp(lerpedSpeed, 3f, Time.deltaTime * 15f);
             }
 
             if (currentWeapon != null)
             {
-                lerpedSpeed = Mathf.Lerp(lerpedSpeed, 0, Time.deltaTime * 25f);
+                lerpedSpeed = Mathf.Lerp(lerpedSpeed, .5f, Time.deltaTime * 15f);
+            }
+
+            if (enemyManager.HaveClosestEnemy(model.transform.position) == false && currentWeapon == null)
+            {
+                lerpedSpeed = Mathf.Lerp(lerpedSpeed, movementSpeed, Time.deltaTime * 10f);
             }
 
             transform.Translate(Vector3.forward * Time.deltaTime * lerpedSpeed);
