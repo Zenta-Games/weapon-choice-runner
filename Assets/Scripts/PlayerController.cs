@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour , IInitializable
         playingPanel.ProgressBar.UpdateValue(transform.position.z / finishDistance);
     }
 
-    private float movementSpeed = 10f;
+    private float movementSpeed = 12f;
 
     private float lerpedSpeed = 0f;
 
@@ -239,7 +239,7 @@ public class PlayerController : MonoBehaviour , IInitializable
 
                 yield return new WaitForSeconds(.1f);
 
-                movementSpeed = 10f;
+                movementSpeed = 12f;
 
                 weapon.Active();
             }
