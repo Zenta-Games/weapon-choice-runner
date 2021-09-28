@@ -20,7 +20,6 @@ public class WE_Rock : MonoBehaviour , IWeapon
 
     public float actionTime;
     public float ActionTime { get { return actionTime; } }
-
     public Color weaponColor { get { return WeaponColor; } }
 
     public Color WeaponColor;
@@ -44,6 +43,8 @@ public class WE_Rock : MonoBehaviour , IWeapon
         CubePivots = GetComponentsInChildren<CubePivot>().ToList();
 
         WeaponState = WeaponState.READY;
+
+        startPosition = transform.localPosition;
     }
     
     private Vector3 startPosition;
