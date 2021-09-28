@@ -7,6 +7,8 @@ public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance;
 
+    public PlayerController playerController;
+
     private List<Enemy> enemies;
 
     private Boss boss;
@@ -21,17 +23,26 @@ public class EnemyManager : MonoBehaviour
     private void Start()
     {
         boss = Boss.Instance;
+
+        playerController = PlayerController.Instance;
     }
 
     public bool HaveClosestEnemy(Vector3 position)
     {
         position.y = 0f;
 
+        float requiredDistance = 7.5f;
+
+        if (PlayerController.Instance.currentWeapon != null)
+        {
+            requiredDistance = 30f;
+        }
+        
         for (int i = 0; i < enemies.Count; i++)
         {
             if (enemies[i] != null && enemies[i].enemyState == EnemyState.LIVE)
             {
-                if (Vector3.Distance(position, enemies[i].transform.position) < 10f)
+                if (Vector3.Distance(position, enemies[i].transform.position) < requiredDistance)
                 {
                     return true;
                 }

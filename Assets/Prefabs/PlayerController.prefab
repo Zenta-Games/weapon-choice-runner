@@ -52,6 +52,7 @@ MonoBehaviour:
   finishDistance: 0
   ground_Weapon_Selections: []
   animator: {fileID: 992597437025408665}
+  currentWeapon: {fileID: 0}
   onFinishState: 0
 --- !u!1 &6187788175778307188
 GameObject:
@@ -3004,7 +3005,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6469663965112580454}
   - component: {fileID: 6469663964317765506}
-  - component: {fileID: 6469663964317765507}
+  - component: {fileID: 885515628}
   m_Layer: 0
   m_Name: WE_Blade
   m_TagString: Untagged
@@ -3020,7 +3021,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6469663964317765508}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.93, z: 3.907}
+  m_LocalPosition: {x: 0, y: 0.33, z: 3.907}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6469663964579648661}
@@ -3046,20 +3047,19 @@ MonoBehaviour:
   actionTime: 2
   WeaponColor: {r: 0, g: 0.52086806, b: 1, a: 1}
   cubePivots: []
---- !u!136 &6469663964317765507
-CapsuleCollider:
+--- !u!65 &885515628
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6469663964317765508}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 2.67
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 2
+  m_Size: {x: 5.4150286, y: 1, z: 4.7279654}
+  m_Center: {x: 0.00636065, y: 0, z: 0.604362}
 --- !u!1 &6469663964318311269
 GameObject:
   m_ObjectHideFlags: 0

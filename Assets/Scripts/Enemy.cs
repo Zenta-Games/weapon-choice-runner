@@ -14,11 +14,18 @@ public class Enemy : MonoBehaviour
 
     public Action onDie;
 
+    public PlayerController playerController;
+
     private void Awake()
     {
         enemyState = EnemyState.LIVE;
 
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    private void Start()
+    {
+        playerController = PlayerController.Instance;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -77,7 +84,18 @@ public class Enemy : MonoBehaviour
 
             playerPosition.y = 0f;
 
-            if (Vector3.Distance(playerPosition, transform.position) < 10f)
+            float followDistance = 8f;
+
+            if (playerController.currentWeapon != null)
+            {
+                followDistance = 30f;
+            }
+            else
+            {
+                followDistance = 8f;
+            }
+
+            if (Vector3.Distance(playerPosition, transform.position) < followDistance)
             {
                 agent.SetDestination(playerPosition);
 
@@ -122,7 +140,7 @@ public class Enemy : MonoBehaviour
 
         for (int i = 0; i < rigidbodies.Length; i++)
         {
-            bodyrgd.AddForce(((transform.position - damagePoint).normalized + new Vector3(0,.2f,0)) * UnityEngine.Random.Range(2000f, 3000f) );
+            bodyrgd.AddForce(((transform.position - damagePoint).normalized + new Vector3(0,.2f,0)) * UnityEngine.Random.Range(3500f, 5000f) );
         }
     }
 

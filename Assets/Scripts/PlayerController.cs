@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour , IInitializable
         Application.targetFrameRate = 30;
     }
 
-    Ground_Weapon_Selection currentWeapon;
+    public Ground_Weapon_Selection currentWeapon;
 
     private void Start()
     {
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour , IInitializable
         playingPanel.ProgressBar.UpdateValue(transform.position.z / finishDistance);
     }
 
-    private float movementSpeed = 12f;
+    private float movementSpeed = 13f;
 
     private float lerpedSpeed = 0f;
 
@@ -88,7 +88,12 @@ public class PlayerController : MonoBehaviour , IInitializable
 
             if (enemyManager.HaveClosestEnemy(model.transform.position))
             {
-                lerpedSpeed = Mathf.Lerp(lerpedSpeed,0, Time.deltaTime * 15f);
+                lerpedSpeed = Mathf.Lerp(lerpedSpeed, 0, Time.deltaTime * 15f);
+            }
+
+            if (currentWeapon != null)
+            {
+                lerpedSpeed = Mathf.Lerp(lerpedSpeed, 0, Time.deltaTime * 25f);
             }
 
             transform.Translate(Vector3.forward * Time.deltaTime * lerpedSpeed);
@@ -127,8 +132,6 @@ public class PlayerController : MonoBehaviour , IInitializable
         }
         else
         {
-            Time.timeScale = .05f;
-
             playingPanel.JiggleTargetWeapon(weaponType);
         }
     }
@@ -136,10 +139,9 @@ public class PlayerController : MonoBehaviour , IInitializable
     private IEnumerator SetTimeScale(float delayTime,float timeScale) 
     {
         yield return new WaitForSeconds(delayTime);
-
     }
 
-    private Ground_Weapon_Selection GetClosestWeapon()
+    public Ground_Weapon_Selection GetClosestWeapon()
     {
         List<Ground_Weapon_Selection> weapons = ground_Weapon_Selections.FindAll(x => x.isUsed == false);
 
@@ -239,9 +241,11 @@ public class PlayerController : MonoBehaviour , IInitializable
 
                 yield return new WaitForSeconds(.1f);
 
-                movementSpeed = 12f;
+                movementSpeed = 13f;
 
                 weapon.Active();
+
+                currentWeapon = null;
             }
         }
     }
