@@ -36,6 +36,7 @@ public class EnemyCountCalculator : MonoBehaviour
     [Button("Calculate Count")]
     public void CalculateCount()
     {
+	
         Collider[] colliders = Physics.OverlapSphere(transform.position, radius ,layermask);
 
         enemies.Clear();
@@ -60,7 +61,8 @@ public class EnemyCountCalculator : MonoBehaviour
 
         if (enemies.Count == 0)
         {
-            Destroy(this.gameObject);
+            this.gameObject.SetActive(false);
+
         }
     }
 }
