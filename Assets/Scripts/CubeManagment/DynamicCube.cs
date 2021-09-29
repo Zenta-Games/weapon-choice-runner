@@ -42,12 +42,15 @@ public class DynamicCube : MonoBehaviour
         CubeState = CubeState.COLLECTABLE;
 
         model = transform.GetChild(0);
+    }
 
+    private void Start()
+    {
         int random = Random.Range(0, cubeMaterialVariants.Count);
 
-        GetComponent<LineRenderer>().material = lineRendererMaterialVariants[random];
+        GetComponent<TrailRenderer>().sharedMaterial = lineRendererMaterialVariants[random];
 
-        cubePivot.meshRenderer.material = cubeMaterialVariants[random];
+        model.GetComponent<MeshRenderer>().sharedMaterial = cubeMaterialVariants[random];
     }
 
     Vector3 velocity;

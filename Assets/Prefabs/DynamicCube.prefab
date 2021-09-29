@@ -4883,6 +4883,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubePivot: {fileID: 0}
   cubeState: 0
+  cubeMaterialVariants:
+  - {fileID: 2100000, guid: 079c0ba0c9200564594d4df038327199, type: 2}
+  - {fileID: 2100000, guid: 62a8e5abe6a395647b367d554b166922, type: 2}
+  - {fileID: 2100000, guid: 7eba59b3cfae5494dbbaf3a0fad7dbd2, type: 2}
+  - {fileID: 2100000, guid: e04021c5630bd5c44bfa8c0fe04b724b, type: 2}
+  - {fileID: 2100000, guid: 93939121d9744d342b6b8937a3df061d, type: 2}
+  - {fileID: 2100000, guid: 7d269d1e8f49c7c48a604ef883c23c2d, type: 2}
+  - {fileID: 2100000, guid: f6ebdd268fa2a4843b42040145a510c9, type: 2}
+  lineRendererMaterialVariants:
+  - {fileID: 2100000, guid: 784ae45de57114949b9b968b5233b110, type: 2}
+  - {fileID: 2100000, guid: e5e8d23d9f75d0a4898fd0687f46fe9f, type: 2}
+  - {fileID: 2100000, guid: 73cd51d116701a848b705bbdeb719324, type: 2}
+  - {fileID: 2100000, guid: 3c20ff4e4e0a79d46b0e7fd886d63040, type: 2}
+  - {fileID: 2100000, guid: fb3466f610b43c347b8611f295257393, type: 2}
+  - {fileID: 2100000, guid: 39e7a692e5d148a4ea60254574a8fd2e, type: 2}
+  - {fileID: 2100000, guid: 0e06921d4cb697e4c8eab0c41f6aa20a, type: 2}
   targetDistance: 0
 --- !u!54 &7563477917476463552
 Rigidbody:
