@@ -16,6 +16,10 @@ public class DynamicCube : MonoBehaviour
     private Transform model;
 
     private Color targetColor = new Color(.99f, .474f, .65f);
+
+    public List<Material> cubeMaterialVariants;
+
+    public List<Material> lineRendererMaterialVariants;
     
     public CubeState CubeState 
     {
@@ -38,6 +42,12 @@ public class DynamicCube : MonoBehaviour
         CubeState = CubeState.COLLECTABLE;
 
         model = transform.GetChild(0);
+
+        int random = Random.Range(0, cubeMaterialVariants.Count);
+
+        GetComponent<LineRenderer>().material = lineRendererMaterialVariants[random];
+
+        cubePivot.meshRenderer.material = cubeMaterialVariants[random];
     }
 
     Vector3 velocity;
